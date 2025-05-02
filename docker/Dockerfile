@@ -63,7 +63,7 @@ RUN apt-get update && apt-get install -y \
 
 
 RUN apt-get update && apt-get install -y \
-    ros-humble-ur-msgs \
+    ros-humble-moveit \
     && rm -rf /var/lib/apt/lists/*
 
 
