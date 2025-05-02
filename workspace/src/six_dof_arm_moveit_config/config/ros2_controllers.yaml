@@ -20,7 +20,6 @@ arm_group_controller:
       - joint_a5
       - joint_a6
     command_interfaces:
-      - position
+      []
     state_interfaces:
-      - position
-      - velocity
+      []

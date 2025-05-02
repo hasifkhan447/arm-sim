@@ -32,6 +32,34 @@ def generate_launch_description():
     xacro.process_doc(doc)
 
     params = {'robot_description': doc.toxml()}
+
+    moveit_config = (
+        MoveItConfigsBuilder("six_dof_arm")
+        .robot_description(file_path="config/kuka_kr120r2500pro.srdf")
+        .trajectory_execution(file_path="config/moveit_controllers.yaml")
+        .planning_scene_monitor(
+            publish_robot_description=True, publish_robot_description_semantic=True
+        )
+        .planning_pipelines(pipelines=["ompl"])
+        .to_moveit_configs()
+    )
+
+    run_move_group_node = Node(
+        package="moveit_ros_move_group",
+        executable="move_group",
+        output="screen",
+        parameters=[moveit_config.to_dict()],
+    )
+    #
+    # rviz_base = os.path.join(package_path, "rviz")
+    # rviz_empty_ = os.path.join(rviz_base, "kuka.rviz")
+    #
+    # rviz_node_launch = Node(
+    #     package="rviz2",
+    #     executable="rviz2",
+    #
+    # )
+    #
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -77,5 +105,6 @@ def generate_launch_description():
 
         gazebo,
         node_robot_state_publisher,
-        spawn_entity
+        spawn_entity,
+        run_move_group_node
     ])
