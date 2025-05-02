@@ -1,0 +1,25 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: six_dof_arm
+    relative_path: urdf/kr120r2500pro.xacro
+  srdf:
+    relative_path: config/kuka_kr120r2500pro.srdf
+  package_settings:
+    author_name: hamad
+    author_email: hasifkhan.447@gmail.com
+    generated_timestamp: 1746202000
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity

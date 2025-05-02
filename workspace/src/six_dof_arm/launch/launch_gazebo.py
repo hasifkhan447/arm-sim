@@ -13,6 +13,7 @@ from moveit_configs_utils import MoveItConfigsBuilder
 
 
 def generate_launch_description():
+
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py'
@@ -31,6 +32,27 @@ def generate_launch_description():
     xacro.process_doc(doc)
 
     params = {'robot_description': doc.toxml()}
+
+    moveit_config = (
+        MoveItConfigsBuilder("six_dof_arm")
+        .robot_description(file_path="config/kr120r2500pro.xacro")
+        .trajectory_execution(file_path="config/moveit_simple_controllers.yaml")
+        .planning_scene_monitor(
+            publish_robot_description=True, publish_robot_description_semantic=True
+        )
+        .planning_pipelines(pipelines=["ompl"])
+        .to_moveit_configs()
+    )
+
+    run_move_group_node = Node(
+        package="moveit_ros_move_group",
+        executeable="move_group",
+        output="screen",
+        parameters=[moveit_config.to_dict()],
+    )
+
+    rviz_base = os.path.join(package_path, "rviz")
+    rviz_empty_ = os.path.join(rviz_base, "kuka.rviz")
 
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
