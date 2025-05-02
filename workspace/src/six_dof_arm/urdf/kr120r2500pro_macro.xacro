@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
-
   <xacro:macro name="kuka_kr120r2500pro" params="prefix">
     <!-- LINKS -->
     <!-- base link -->
@@ -13,13 +12,13 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/visual/base_link.dae" />
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/visual/base_link.dae" />
         </geometry>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/collision/base_link.stl" />
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/collision/base_link.stl" />
         </geometry>
       </collision>
     </link>
@@ -33,13 +32,13 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/visual/link_1.dae" />
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/visual/link_1.dae" />
         </geometry>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/collision/link_1.stl" />
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/collision/link_1.stl" />
         </geometry>
       </collision>
     </link>
@@ -53,13 +52,13 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/visual/link_2.dae"/>
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/visual/link_2.dae"/>
         </geometry>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/collision/link_2.stl" />
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/collision/link_2.stl" />
         </geometry>
       </collision>
     </link>
@@ -73,13 +72,13 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/visual/link_3.dae" />
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/visual/link_3.dae" />
         </geometry>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/collision/link_3.stl" />
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/collision/link_3.stl" />
         </geometry>
       </collision>
     </link>
@@ -93,13 +92,13 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/visual/link_4.dae" />
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/visual/link_4.dae" />
         </geometry>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/collision/link_4.stl" />
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/collision/link_4.stl" />
         </geometry>
       </collision>
     </link>
@@ -113,13 +112,13 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/visual/link_5.dae" />
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/visual/link_5.dae" />
         </geometry>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/collision/link_5.stl" />
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/collision/link_5.stl" />
         </geometry>
       </collision>
     </link>
@@ -133,13 +132,13 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/visual/link_6.dae" />
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/visual/link_6.dae" />
         </geometry>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kuka/meshes/kr120r2500pro/collision/link_6.stl" />
+          <mesh filename="package://six_dof_arm/meshes/kr120r2500pro/collision/link_6.stl" />
         </geometry>
       </collision>
     </link>
@@ -236,7 +235,7 @@
     </joint>
     <!-- END JOINTS -->
 
-    <!-- ROS base_link to KUKA $ROBROOT coordinate system transform -->
+    <!-- ROS base_link to six_dof_arm $ROBROOT coordinate system transform -->
     <link name="${prefix}base" />
     <joint name="${prefix}base_link-base" type="fixed">
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -244,118 +243,13 @@
       <child link="${prefix}base"/>
     </joint>
 
-    <!-- This frame corresponds to the $TOOL coordinate system in KUKA KRC controllers -->
+    <!-- This frame corresponds to the $TOOL coordinate system in six_dof_arm KRC controllers -->
     <link name="${prefix}tool0" />
     <joint name="${prefix}flange-tool0" type="fixed">
       <parent link="${prefix}flange"/>
       <child link="${prefix}tool0"/>
       <origin xyz="0 0 0" rpy="0 ${radians(90)} 0"/>
     </joint>
-
-
-    <gazebo>
-        <!-- <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-          <parameters>$(find kuka)/config/controllers.yaml</parameters>
-        </plugin> -->
-
-
-        <plugin filename="/opt/ros/jazzy/lib/libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-
-          <parameters>$(find kuka_moveit)/config/ros2_controllers.yaml</parameters>
-          <!-- <robot_param_node>robot_state_publisher</robot_param_node> -->
-        </plugin>
-
-
-
-
-
-
-        <plugin filename="gz-sim-joint-state-publisher-system"
-          name="gz::sim::systems::JointStatePublisher">
-          <topic>joint_states</topic> <!--from <ros><remapping> -->
-
-          <joint_name>joint_a1</joint_name>
-          <joint_name>joint_a2</joint_name>
-          <joint_name>joint_a3</joint_name>
-          <joint_name>joint_a4</joint_name>
-          <joint_name>joint_a5</joint_name>
-          <joint_name>joint_a6</joint_name>
-        </plugin>
-
-
-        <plugin
-          filename="gz-sim-joint-trajectory-controller-system"
-          name="gz::sim::systems::JointTrajectoryController">
-          <topic>/Arm_controller/joint_trajectory</topic>
-
-          <joint_name>joint_a1</joint_name>
-          <joint_name>joint_a2</joint_name>
-          <joint_name>joint_a3</joint_name>
-          <joint_name>joint_a4</joint_name>
-          <joint_name>joint_a5</joint_name>
-          <joint_name>joint_a6</joint_name>
-        </plugin>
-
-
-    </gazebo>
-
-
-    <ros2_control name="GazeboSystem" type="system">
-      <hardware>
-        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
-      </hardware>
-  <!-- <ros2_control name="MockHardwareSystem" type="system">
-    <hardware>
-      <plugin>mock_components/GenericSystem</plugin>
-    </hardware> -->
-
-
-
-      <joint name="joint_a1">
-        <command_interface name="position"/>
-        <state_interface name="velocity"/>
-        <state_interface name="position"/>
-      </joint>
-
-
-      <joint name="joint_a2">
-        <command_interface name="position"/>
-        <state_interface name="velocity"/>
-        <state_interface name="position"/>
-      </joint>
-
-      <joint name="joint_a3">
-        <command_interface name="position"/>
-        <state_interface name="velocity"/>
-        <state_interface name="position"/>
-      </joint>
-
-      <joint name="joint_a4">
-        <command_interface name="position"/>
-        <state_interface name="velocity"/>
-        <state_interface name="position"/>
-      </joint>
-
-
-      <joint name="joint_a5">
-        <command_interface name="position"/>
-        <state_interface name="velocity"/>
-        <state_interface name="position"/>
-      </joint>
-
-      <joint name="joint_a6">
-        <command_interface name="position"/>
-        <state_interface name="velocity"/>
-        <state_interface name="position"/>
-      </joint>
-
-
-  </ros2_control>
-
-
-
-
-
 
 
 
