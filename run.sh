@@ -17,12 +17,13 @@ MOUNTS=(
     "-v$X11_UNIX:/tmp/.X11-unix:rw"
     "-v$XAUTHORITY:/home/$USERNAME/.Xauthority:rw"
     "-v$WORKSPACE_DIR:/home/$USERNAME/workspace:rw"
+    "-v/dev/snd:/dev/snd:rw"
 )
 
 ENV_VARS=(
-    "-e DISPLAY=$DISPLAY"
-    "-e QT_X11_NO_MITSHM=1"
-    "-e NVIDIA_DRIVER_CAPABILITIES=all"
+    "-eDISPLAY=$DISPLAY"
+    "-eQT_X11_NO_MITSHM=1"
+    "-eNVIDIA_DRIVER_CAPABILITIES=all"
 )
 RUNTIME_FLAGS=(
     "--privileged"

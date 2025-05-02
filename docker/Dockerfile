@@ -41,6 +41,14 @@ RUN apt-get update && apt-get install -y \
     x11-apps \
     && rm -rf /var/lib/apt/lists/*
 
+
+RUN apt-get update && apt-get install -y \
+    libx11-xcb1 \
+    libxcb-xfixes0 \
+    libqt5x11extras5 \
+    qtbase5-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # Create a non-root user
 ARG USERNAME=rosdev
 ARG USER_UID=1000
@@ -61,6 +69,8 @@ RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /home/$USERNAME/.bashrc \
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN sudo chmod +x /entrypoint.sh
 
+
 # Entrypoint and default command
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]
+
