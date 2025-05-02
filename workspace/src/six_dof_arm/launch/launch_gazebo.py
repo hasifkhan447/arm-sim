@@ -39,6 +39,18 @@ def generate_launch_description():
         parameters=[params]
     )
 
+    load_joint_state_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+             '--set-state', 'active', 'joint_state_broadcaster'],
+        output='screen'
+    )
+
+    load_arm_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+             '--set-state', 'active', 'arm_controller'],
+        output='screen'
+    )
+
     spawn_entity = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
@@ -49,6 +61,20 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=spawn_entity,
+                on_exit=[load_joint_state_controller]
+            )
+        ),
+
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_joint_state_controller,
+                on_exit=[load_arm_controller]
+            )
+        ),
+
         gazebo,
         node_robot_state_publisher,
         spawn_entity
