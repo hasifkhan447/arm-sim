@@ -49,6 +49,24 @@ RUN apt-get update && apt-get install -y \
     qtbase5-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Add ROS 2 apt repository
+RUN sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list' \
+    && wget -qO - https://raw.githubusercontent.com/ros/rosdistro/master/ros.key | apt-key add -
+
+
+RUN apt-get update && apt-get install -y \
+    ros-humble-ros2-control \
+    ros-humble-ros2-controllers \
+    ros-humble-xacro \
+    ros-humble-rviz2 \
+    && rm -rf /var/lib/apt/lists/*
+
+
+RUN apt-get update && apt-get install -y \
+    ros-humble-ur-msgs \
+    && rm -rf /var/lib/apt/lists/*
+
+
 # Create a non-root user
 ARG USERNAME=rosdev
 ARG USER_UID=1000
@@ -58,10 +76,15 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
+
+
+
+
 # Create ROS 2 workspace
 USER $USERNAME
 WORKDIR /home/$USERNAME/workspace
 RUN mkdir -p src
+
 
 # Source ROS 2 and Gazebo in .bashrc
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /home/$USERNAME/.bashrc \
