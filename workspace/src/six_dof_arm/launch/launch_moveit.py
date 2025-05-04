@@ -1,6 +1,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch import LaunchDescription
 from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
 from launch.event_handlers import (OnProcessStart, OnProcessExit)
@@ -45,7 +46,16 @@ def generate_launch_description():
 
     moveit_config = (
         MoveItConfigsBuilder("six_dof_arm")
-        .robot_description(file_path="config/kuka_kr120r2500pro.urdf.xacro")
+        .robot_description(
+            file_path="config/kuka_kr120r2500pro.urdf.xacro",
+            # mappings={
+            #     "ros2_control_hardware_type": "mock_components"
+            # },
+        )
+        .robot_description_semantic(
+            file_path="config/kuka_kr120r2500pro.srdf"
+        )
+
         .trajectory_execution(file_path="config/moveit_controllers.yaml")
         .planning_scene_monitor(
             publish_robot_description=True, publish_robot_description_semantic=True
