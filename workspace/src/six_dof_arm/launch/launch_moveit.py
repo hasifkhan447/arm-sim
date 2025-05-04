@@ -50,16 +50,19 @@ def generate_launch_description():
         output="screen",
         parameters=[moveit_config.to_dict()],
     )
-    #
-    # rviz_base = os.path.join(package_path, "rviz")
-    # rviz_empty_ = os.path.join(rviz_base, "kuka.rviz")
-    #
-    # rviz_node_launch = Node(
-    #     package="rviz2",
-    #     executable="rviz2",
-    #
-    # )
-    #
+
+    rviz_base = os.path.join(package_path, "rviz")
+    rviz_config_path = os.path.join(rviz_base, "six_dof_arm.rviz")
+    print(rviz_config_path)
+
+    rviz_node_launch = Node(
+        package="rviz2",
+        executable="rviz2",
+        name='rviz2',
+        output='screen',
+        arguments=['-d', rviz_config_path]
+    )
+
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -106,5 +109,6 @@ def generate_launch_description():
         gazebo,
         node_robot_state_publisher,
         spawn_entity,
-        run_move_group_node
+        run_move_group_node,
+        rviz_node_launch
     ])

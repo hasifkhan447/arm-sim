@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="kuka_kr120r2500pro">
+    <xacro:arg name="initial_positions_file" default="initial_positions.yaml" />
+
+    <!-- Import kuka_kr120r2500pro urdf file -->
+    <xacro:include filename="$(find six_dof_arm)/urdf/kr120r2500pro.xacro" />
+
+    <!-- Import control_xacro -->
+    <xacro:include filename="kuka_kr120r2500pro.ros2_control.xacro" />
+
+
+    <xacro:kuka_kr120r2500pro_ros2_control name="FakeSystem" initial_positions_file="$(arg initial_positions_file)"/>
+
+</robot>
