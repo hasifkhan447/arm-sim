@@ -31,11 +31,21 @@ def generate_launch_description():
     doc = xacro.parse(open(xacro_file))
     xacro.process_doc(doc)
 
-    params = {'robot_description': doc.toxml()}
+    moveit_pkg_path = get_package_share_directory('six_dof_arm_moveit_config')
+    srdf_path = os.path.join(moveit_pkg_path, 'config',
+                             'kuka_kr120r2500pro.srdf')
+    with open(srdf_path, 'r') as srdf_file:
+        robot_srdf = srdf_file.read()
+
+    params = {
+        'robot_description': doc.toxml(),
+        'robot_description_semantic': robot_srdf,
+        'use_sim_time': True
+    }
 
     moveit_config = (
         MoveItConfigsBuilder("six_dof_arm")
-        .robot_description(file_path="config/kuka_kr120r2500pro.srdf")
+        .robot_description(file_path="config/kuka_kr120r2500pro.urdf.xacro")
         .trajectory_execution(file_path="config/moveit_controllers.yaml")
         .planning_scene_monitor(
             publish_robot_description=True, publish_robot_description_semantic=True

@@ -41,7 +41,18 @@ DOCKER_ARGS=(
 )
 
 # Remove existing container
-docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
+# docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
 
-# Run the container
-docker run --name "$CONTAINER_NAME" "${DOCKER_ARGS[@]}" "$IMAGE_NAME" bash 
+if docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+  echo "Attaching new terminal to running container..."
+  docker exec -it "$CONTAINER_NAME" bash
+elif docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+  echo "Starting existing container..."
+  docker start "$CONTAINER_NAME"
+  docker exec -it "$CONTAINER_NAME" bash
+else
+  echo "Running new container..."
+  docker run --name "$CONTAINER_NAME" "${DOCKER_ARGS[@]}" "$IMAGE_NAME" bash
+fi
+
+
