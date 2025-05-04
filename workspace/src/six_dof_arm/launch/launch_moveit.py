@@ -68,7 +68,10 @@ def generate_launch_description():
         package="moveit_ros_move_group",
         executable="move_group",
         output="screen",
-        parameters=[moveit_config.to_dict()],
+        parameters=[
+            moveit_config.to_dict(),
+            {'use_sim_time': True}  # <-- ADD THIS LINE
+        ],
     )
 
     rviz_base = os.path.join(package_path, "rviz")
@@ -80,7 +83,10 @@ def generate_launch_description():
         executable="rviz2",
         name='rviz2',
         output='screen',
-        arguments=['-d', rviz_config_path]
+        arguments=['-d', rviz_config_path],
+        parameters=[
+            {'use_sim_time': True}
+        ]
     )
 
     node_robot_state_publisher = Node(
@@ -93,13 +99,17 @@ def generate_launch_description():
     load_joint_state_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller',
              '--set-state', 'active', 'joint_state_broadcaster'],
-        output='screen'
+        output='screen',
+        # Set environment variable for sim time
+        additional_env={'ROS_USE_SIM_TIME': 'true'}
     )
 
     load_arm_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller',
              '--set-state', 'active', 'arm_group_controller'],
-        output='screen'
+        output='screen',
+        # Set environment variable for sim time
+        additional_env={'ROS_USE_SIM_TIME': 'true'}
     )
 
     spawn_entity = Node(
@@ -108,6 +118,10 @@ def generate_launch_description():
         arguments=[
             '-topic', '/robot_description',
             '-entity', 'six_dof_arm'
+        ],
+
+        parameters=[
+            {'use_sim_time': True}
         ]
     )
 
