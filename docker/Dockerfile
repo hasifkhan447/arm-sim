@@ -66,6 +66,9 @@ RUN apt-get update && apt-get install -y \
     ros-humble-moveit \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y \
+    ros-humble-moveit-visual-tools \
+    && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user
 ARG USERNAME=rosdev

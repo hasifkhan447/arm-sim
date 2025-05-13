@@ -158,7 +158,7 @@ def generate_launch_description():
         node_robot_state_publisher,
         spawn_entity,
         run_move_group_node,
-        # rviz_node_launch,
+        rviz_node_launch,
 
         delayed_run_planning
     ])

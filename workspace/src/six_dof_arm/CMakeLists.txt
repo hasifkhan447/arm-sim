@@ -14,16 +14,17 @@ find_package(ament_cmake REQUIRED)
 
 find_package(rclcpp REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)  # and others you use
-
+find_package(moveit_ros_planning REQUIRED)
+find_package(moveit_visual_tools REQUIRED)
 
 
 add_executable(trajectory src/trajectory.cpp)
 
-
 ament_target_dependencies(trajectory
   rclcpp
   moveit_ros_planning_interface
-  # Add other deps like tf2_ros, geometry_msgs, etc. if used
+  moveit_ros_planning
+  moveit_visual_tools 
 )
 
 
