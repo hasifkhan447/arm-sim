@@ -12,9 +12,39 @@ find_package(ament_cmake REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 
+find_package(rclcpp REQUIRED)
+find_package(moveit_ros_planning_interface REQUIRED)  # and others you use
+
+
+
+add_executable(trajectory src/trajectory.cpp)
+
+
+ament_target_dependencies(trajectory
+  rclcpp
+  moveit_ros_planning_interface
+  # Add other deps like tf2_ros, geometry_msgs, etc. if used
+)
+
+
+
+install(TARGETS trajectory
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+
+
+
+
+
 install(DIRECTORY urdf meshes launch rviz config worlds
   DESTINATION share/${PROJECT_NAME}
 )
+
+
+
+
+
 
 
 
