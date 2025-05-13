@@ -6,7 +6,7 @@
     <link name="${prefix}base_link">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="2"/>
+        <mass value="80"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -26,7 +26,7 @@
     <link name="${prefix}link_1">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="2"/>
+        <mass value="80"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -46,7 +46,7 @@
     <link name="${prefix}link_2">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="2"/>
+        <mass value="80"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -66,7 +66,7 @@
     <link name="${prefix}link_3">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="2"/>
+        <mass value="80"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -86,7 +86,7 @@
     <link name="${prefix}link_4">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="2"/>
+        <mass value="80"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -106,7 +106,7 @@
     <link name="${prefix}link_5">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="2"/>
+        <mass value="80"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -126,7 +126,7 @@
     <link name="${prefix}link_6">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="2"/>
+        <mass value="80"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -261,62 +261,76 @@
 
 
       <joint name="joint_a1">
-        <command_interface name="position"/>
+        <!--<command_interface name="position"/>-->
+        <command_interface name="position_pid"/>
+        <command_interface name="effort"/>
         <state_interface name="position">
           <param name="initial_value">0.0</param>
         </state_interface>
         <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
 
 
       <joint name="joint_a2">
-        <command_interface name="position"/>
+        <!--<command_interface name="position"/>-->
+        <command_interface name="position_pid"/>
+        <command_interface name="effort"/>
         <state_interface name="position">
           <param name="initial_value">0.0</param>
         </state_interface>
         <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
 
 
       <joint name="joint_a3">
-        <command_interface name="position"/>
+        <!--<command_interface name="position"/>-->
+        <command_interface name="position_pid"/>
+        <command_interface name="effort"/>
         <state_interface name="position">
           <param name="initial_value">0.0</param>
         </state_interface>
         <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
 
 
       <joint name="joint_a4">
-        <command_interface name="position"/>
+        <!--<command_interface name="position"/>-->
+        <command_interface name="position_pid"/>
+        <command_interface name="effort"/>
         <state_interface name="position">
           <param name="initial_value">0.0</param>
         </state_interface>
         <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
 
 
 
       <joint name="joint_a5">
-        <command_interface name="position"/>
+        <!--<command_interface name="position"/>-->
+        <command_interface name="position_pid"/>
+        <command_interface name="effort"/>
         <state_interface name="position">
           <param name="initial_value">0.0</param>
         </state_interface>
         <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
 
 
       <joint name="joint_a6">
-        <command_interface name="position"/>
+        <!--<command_interface name="position"/>-->
+        <command_interface name="position_pid"/>
+        <command_interface name="effort"/>
         <state_interface name="position">
           <param name="initial_value">0.0</param>
         </state_interface>
         <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
-
-
-
-
     </ros2_control>
 
     <gazebo>
