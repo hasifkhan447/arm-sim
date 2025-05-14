@@ -6,7 +6,7 @@
     <link name="${prefix}base_link">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="80"/>
+        <mass value="2"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -26,7 +26,7 @@
     <link name="${prefix}link_1">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="80"/>
+        <mass value="2"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -46,7 +46,7 @@
     <link name="${prefix}link_2">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="80"/>
+        <mass value="2"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -66,7 +66,7 @@
     <link name="${prefix}link_3">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="80"/>
+        <mass value="2"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -86,7 +86,7 @@
     <link name="${prefix}link_4">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="80"/>
+        <mass value="2"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -106,7 +106,7 @@
     <link name="${prefix}link_5">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="80"/>
+        <mass value="2"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -126,7 +126,7 @@
     <link name="${prefix}link_6">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="80"/>
+        <mass value="2"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -337,7 +337,93 @@
       <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
        <parameters>$(find six_dof_arm)/config/six_dof_arm_controllers.yaml</parameters>
       </plugin>
+
+
+
     </gazebo>
+
+    <gazebo reference="joint_a1">
+      <sensor name="joint_a1_force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>20.0</update_rate>
+        <visualize>true</visualize>
+        <force_torque>
+          <frame>sensor</frame>
+          <measure_direction>child_to_parent</measure_direction>
+        </force_torque>
+      </sensor>
+    </gazebo>
+
+    <gazebo reference="joint_a2">
+      <sensor name="joint_a2_force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>20.0</update_rate>
+        <visualize>true</visualize>
+        <force_torque>
+          <frame>sensor</frame>
+          <measure_direction>child_to_parent</measure_direction>
+        </force_torque>
+      </sensor>
+    </gazebo>
+
+    <gazebo reference="joint_a3">
+      <sensor name="joint_a3_force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>20.0</update_rate>
+        <visualize>true</visualize>
+        <force_torque>
+          <frame>sensor</frame>
+          <measure_direction>child_to_parent</measure_direction>
+        </force_torque>
+      </sensor>
+    </gazebo>
+
+
+
+
+    <gazebo reference="joint_a4">
+      <sensor name="joint_a4_force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>20.0</update_rate>
+        <visualize>true</visualize>
+        <force_torque>
+          <frame>sensor</frame>
+          <measure_direction>child_to_parent</measure_direction>
+        </force_torque>
+      </sensor>
+    </gazebo>
+
+
+
+
+    <gazebo reference="joint_a5">
+      <sensor name="joint_a5_force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>20.0</update_rate>
+        <visualize>true</visualize>
+        <force_torque>
+          <frame>sensor</frame>
+          <measure_direction>child_to_parent</measure_direction>
+        </force_torque>
+      </sensor>
+    </gazebo>
+
+
+
+
+
+    <gazebo reference="joint_a6">
+      <sensor name="joint_a6_force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>20.0</update_rate>
+        <visualize>true</visualize>
+        <force_torque>
+          <frame>sensor</frame>
+          <measure_direction>child_to_parent</measure_direction>
+        </force_torque>
+      </sensor>
+    </gazebo>
+
 
 
 
