@@ -33,9 +33,16 @@ ament_target_dependencies(trajectory
 install(TARGETS trajectory
   DESTINATION lib/${PROJECT_NAME}
 )
-install(DIRECTORY urdf meshes launch rviz config worlds
+install(DIRECTORY urdf meshes launch rviz config worlds scripts
   DESTINATION share/${PROJECT_NAME}
 )
+# # Install Python scripts
+# install(PROGRAMS
+#   scripts/torque_plotter.py
+#   DESTINATION lib/${PROJECT_NAME}
+# )
+
+
 
 link_directories(${GAZEBO_LIBRARY_DIRS})
 

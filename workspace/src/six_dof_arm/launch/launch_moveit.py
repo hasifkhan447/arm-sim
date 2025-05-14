@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 from ament_index_python.packages import get_package_share_directory
 
@@ -175,6 +176,10 @@ def generate_launch_description():
         ]
     )
 
+    plotter = ExecuteProcess(
+        cmd=['python3', os.path.join(package_path, 'scripts', 'torque_plotter.py')], output='screen',
+    )
+
     return LaunchDescription([
         RegisterEventHandler(
             event_handler=OnProcessExit(
@@ -229,7 +234,12 @@ def generate_launch_description():
                 on_exit=[load_a5_ft_broadcaster]
             )
         ),
-
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_a5_ft_broadcaster,
+                on_exit=[plotter]
+            )
+        ),
 
         gazebo,
         node_robot_state_publisher,
