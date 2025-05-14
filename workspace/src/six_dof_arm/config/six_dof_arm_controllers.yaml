@@ -19,6 +19,71 @@ controller_manager:
         - velocity
         - effort
 
+# Broadcaster for joint_a1 force-torque sensor
+    joint_a1_ft_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+
+    # Broadcaster for joint_a2 force-torque sensor
+    joint_a2_ft_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+
+    # Broadcaster for joint_a3 force-torque sensor
+    joint_a3_ft_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+    # Broadcaster for joint_a4 force-torque sensor
+    joint_a4_ft_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+
+    # Broadcaster for joint_a5 force-torque sensor
+    joint_a5_ft_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+
+    # Broadcaster for joint_a6 force-torque sensor
+    joint_a6_ft_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+
+
+joint_a1_ft_broadcaster:
+    ros__parameters:
+      sensor_name: joint_a1_force_torque
+      frame_id: joint_a1
+      topic_name: /joint_a1_force_torque
+
+
+
+joint_a2_ft_broadcaster:
+    ros__parameters:
+      sensor_name: joint_a2_force_torque
+      frame_id: joint_a2
+      topic_name: /joint_a2_force_torque
+
+
+joint_a3_ft_broadcaster:
+    ros__parameters:
+      sensor_name: joint_a3_force_torque
+      frame_id: joint_a3
+      topic_name: /joint_a3_force_torque
+
+
+joint_a4_ft_broadcaster:
+    ros__parameters:
+      sensor_name: joint_a4_force_torque
+      frame_id: joint_a4
+      topic_name: /joint_a4_force_torque
+
+
+joint_a5_ft_broadcaster:
+    ros__parameters:
+      sensor_name: joint_a5_force_torque
+      frame_id: joint_a5
+      topic_name: /joint_a5_force_torque
+
+
+joint_a6_ft_broadcaster:
+    ros__parameters:
+      sensor_name: joint_a6_force_torque
+      frame_id: joint_a6
+      topic_name: /joint_a6_force_torque
 
 
 

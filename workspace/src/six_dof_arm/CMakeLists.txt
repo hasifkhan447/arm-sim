@@ -16,6 +16,7 @@ find_package(rclcpp REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)  # and others you use
 find_package(moveit_ros_planning REQUIRED)
 find_package(moveit_visual_tools REQUIRED)
+find_package(gazebo REQUIRED)
 
 
 add_executable(trajectory src/trajectory.cpp)
@@ -32,21 +33,33 @@ ament_target_dependencies(trajectory
 install(TARGETS trajectory
   DESTINATION lib/${PROJECT_NAME}
 )
-
-
-
-
-
-
 install(DIRECTORY urdf meshes launch rviz config worlds
   DESTINATION share/${PROJECT_NAME}
 )
 
+link_directories(${GAZEBO_LIBRARY_DIRS})
 
-
-
-
-
+# include_directories(
+#   include
+#   ${rclcpp_INCLUDE_DIRS}
+#   ${geometry_msgs_INCLUDE_DIRS}
+#   ${GAZEBO_INCLUDE_DIRS}
+# )
+#
+# # Define the executable
+# add_executable(torque_publisher src/torque_publisher.cpp)
+#
+# # Link libraries for ROS 2 and Gazebo
+# target_link_libraries(torque_publisher
+#   ${rclcpp_LIBRARIES}
+#   ${geometry_msgs_LIBRARIES}
+#   ${GAZEBO_LIBRARIES}
+# )
+#
+# # Install the executable
+# install(TARGETS torque_publisher
+#   DESTINATION lib/${PROJECT_NAME}
+# )
 
 
 if(BUILD_TESTING)

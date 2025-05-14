@@ -106,6 +106,54 @@ def generate_launch_description():
         additional_env={'ROS_USE_SIM_TIME': 'true'}
     )
 
+    load_a1_ft_broadcaster = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+             '--set-state', 'active', 'joint_a1_ft_broadcaster'],
+        output='screen',
+        # Set environment variable for sim time
+        additional_env={'ROS_USE_SIM_TIME': 'true'}
+    )
+
+    load_a2_ft_broadcaster = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+             '--set-state', 'active', 'joint_a2_ft_broadcaster'],
+        output='screen',
+        # Set environment variable for sim time
+        additional_env={'ROS_USE_SIM_TIME': 'true'}
+    )
+
+    load_a3_ft_broadcaster = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+             '--set-state', 'active', 'joint_a3_ft_broadcaster'],
+        output='screen',
+        # Set environment variable for sim time
+        additional_env={'ROS_USE_SIM_TIME': 'true'}
+    )
+
+    load_a4_ft_broadcaster = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+             '--set-state', 'active', 'joint_a4_ft_broadcaster'],
+        output='screen',
+        # Set environment variable for sim time
+        additional_env={'ROS_USE_SIM_TIME': 'true'}
+    )
+
+    load_a5_ft_broadcaster = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+             '--set-state', 'active', 'joint_a5_ft_broadcaster'],
+        output='screen',
+        # Set environment variable for sim time
+        additional_env={'ROS_USE_SIM_TIME': 'true'}
+    )
+
+    load_a6_ft_broadcaster = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+             '--set-state', 'active', 'joint_a6_ft_broadcaster'],
+        output='screen',
+        # Set environment variable for sim time
+        additional_env={'ROS_USE_SIM_TIME': 'true'}
+    )
+
     load_arm_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller',
              '--set-state', 'active', 'arm_group_controller'],
@@ -141,6 +189,47 @@ def generate_launch_description():
                 on_exit=[load_arm_controller]
             )
         ),
+
+
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_joint_state_controller,
+                on_exit=[load_a1_ft_broadcaster]
+            )
+        ),
+
+
+
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_a1_ft_broadcaster,
+                on_exit=[load_a2_ft_broadcaster]
+            )
+        ),
+
+
+
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_a2_ft_broadcaster,
+                on_exit=[load_a3_ft_broadcaster]
+            )
+        ),
+
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_a3_ft_broadcaster,
+                on_exit=[load_a4_ft_broadcaster]
+            )
+        ),
+
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_a4_ft_broadcaster,
+                on_exit=[load_a5_ft_broadcaster]
+            )
+        ),
+
 
         gazebo,
         node_robot_state_publisher,
