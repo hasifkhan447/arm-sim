@@ -338,8 +338,6 @@
        <parameters>$(find six_dof_arm)/config/six_dof_arm_controllers.yaml</parameters>
       </plugin>
 
-
-
     </gazebo>
 
     <gazebo reference="joint_a1">
