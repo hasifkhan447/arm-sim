@@ -109,11 +109,11 @@ arm_group_controller:
       - position
       - velocity
     gains:
-      joint_a1: {p: 100.0, i: 0.01, d: 10.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
-      joint_a2: {p: 100.0, i: 0.01, d: 10.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
-      joint_a3: {p: 100.0, i: 0.01, d: 10.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
-      joint_a4: {p: 100.0, i: 0.01, d: 10.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
-      joint_a5: {p: 100.0, i: 0.01, d: 10.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
-      joint_a6: {p: 100.0, i: 0.01, d: 10.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
+      joint_a1: {p: 10.0, i: 0.01, d: 1.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
+      joint_a2: {p: 10.0, i: 0.01, d: 1.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
+      joint_a3: {p: 10.0, i: 0.01, d: 1.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
+      joint_a4: {p: 10.0, i: 0.01, d: 1.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
+      joint_a5: {p: 10.0, i: 0.01, d: 1.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
+      joint_a6: {p: 10.0, i: 0.01, d: 1.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
     open_loop_control: false
 

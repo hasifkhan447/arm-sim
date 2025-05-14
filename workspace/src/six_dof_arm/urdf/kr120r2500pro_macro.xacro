@@ -3,12 +3,19 @@
   <xacro:macro name="kuka_kr120r2500pro" params="prefix">
     <!-- LINKS -->
     <!-- base link -->
+
+
+    <link name="world"></link>
+
+
     <link name="${prefix}base_link">
+
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <mass value="2"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
+
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
@@ -26,7 +33,7 @@
     <link name="${prefix}link_1">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="2"/>
+        <mass value="209"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -46,7 +53,7 @@
     <link name="${prefix}link_2">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="2"/>
+        <mass value="316"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -66,7 +73,7 @@
     <link name="${prefix}link_3">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="2"/>
+        <mass value="79.9"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -86,7 +93,7 @@
     <link name="${prefix}link_4">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="2"/>
+        <mass value="27.3"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -106,7 +113,7 @@
     <link name="${prefix}link_5">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="2"/>
+        <mass value="50"/>
         <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
       <visual>
@@ -145,6 +152,13 @@
     <!-- Following REP199, this frame shall be use to attach EEF or other equipment -->
     <link name="${prefix}flange" />
     <!-- END LINKS -->
+
+
+    <joint name="${prefix}world_joint" type="fixed">
+      <origin xyz="1.5 1.0 0" rpy="0 0 0"/>
+      <parent link="world"/>
+      <child link="${prefix}base_link"/>        
+    </joint>
 
     <!-- JOINTS -->
     <!-- joint 1 (A1) -->
@@ -396,7 +410,7 @@
     <gazebo reference="joint_a1">
       <sensor name="joint_a1_force_torque" type="force_torque">
         <always_on>true</always_on>
-        <update_rate>20.0</update_rate>
+        <update_rate>100.0</update_rate>
         <visualize>true</visualize>
         <force_torque>
           <frame>sensor</frame>
@@ -408,7 +422,7 @@
     <gazebo reference="joint_a2">
       <sensor name="joint_a2_force_torque" type="force_torque">
         <always_on>true</always_on>
-        <update_rate>20.0</update_rate>
+        <update_rate>100.0</update_rate>
         <visualize>true</visualize>
         <force_torque>
           <frame>sensor</frame>
@@ -420,7 +434,7 @@
     <gazebo reference="joint_a3">
       <sensor name="joint_a3_force_torque" type="force_torque">
         <always_on>true</always_on>
-        <update_rate>20.0</update_rate>
+        <update_rate>100.0</update_rate>
         <visualize>true</visualize>
         <force_torque>
           <frame>sensor</frame>
@@ -435,7 +449,7 @@
     <gazebo reference="joint_a4">
       <sensor name="joint_a4_force_torque" type="force_torque">
         <always_on>true</always_on>
-        <update_rate>20.0</update_rate>
+        <update_rate>100.0</update_rate>
         <visualize>true</visualize>
         <force_torque>
           <frame>sensor</frame>
@@ -450,7 +464,7 @@
     <gazebo reference="joint_a5">
       <sensor name="joint_a5_force_torque" type="force_torque">
         <always_on>true</always_on>
-        <update_rate>20.0</update_rate>
+        <update_rate>100.0</update_rate>
         <visualize>true</visualize>
         <force_torque>
           <frame>sensor</frame>
@@ -466,7 +480,7 @@
     <gazebo reference="joint_a6">
       <sensor name="joint_a6_force_torque" type="force_torque">
         <always_on>true</always_on>
-        <update_rate>20.0</update_rate>
+        <update_rate>100.0</update_rate>
         <visualize>true</visualize>
         <force_torque>
           <frame>sensor</frame>
