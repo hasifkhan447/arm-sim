@@ -25,11 +25,17 @@ def generate_launch_description():
 
     params = {'robot_description' : xacro_doc.toxml()}
 
-    node_world_publisher = Node(
-        package='tf',
-        executable='static_transform_publisher',
+    node_joint_state_publisher = Node(
+        package="joint_state_publisher",
+        executable="joint_state_publisher",
+        name="joint_state_publisher",
     )
 
+    node_joint_state_publisher_gui = Node(
+        package="joint_state_publisher_gui",
+        executable="joint_state_publisher_gui",
+        name="joint_state_publisher_gui",
+    )
 
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -53,6 +59,8 @@ def generate_launch_description():
 
     return LaunchDescription([
         node_robot_state_publisher,
+        node_joint_state_publisher_gui,
+        node_joint_state_publisher,
         rviz_node_launch,
     ])
 
