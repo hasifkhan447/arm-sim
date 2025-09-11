@@ -41,6 +41,17 @@
     </joint>
   </xacro:macro>
 
+  <xacro:macro name="prismatic_joint" params="parent child xyz rpy axis lower upper">
+    <joint name="${parent}_to_${child}" type="prismatic">
+      <parent link="${parent}" />
+      <child link="${child}" />
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <axis xyz="${axis}" />
+      <limit lower="${lower}" upper="${upper}" effort="100" velocity="1.0" />
+    </joint>
+  </xacro:macro>
+
+
   <!-- Base link -->
   <link name="map" />
 
@@ -74,5 +85,13 @@
   <xacro:bar name="layer4" />
   <xacro:fixed_joint parent="map" child="layer4" xyz="-${length_bar/2} -${length_bar} ${length_bar}"
     rpy="0 0 0" />
+
+  <xacro:bar name="xaxis" />
+  <xacro:prismatic_joint parent="map" child="xaxis"
+    xyz="0 -${length_bar/2} ${length_bar}"
+    rpy="0 0 -${pi/2}"
+    axis="0 1 0"
+    lower="-${length_bar}" upper="0" />
+
 
 </robot>
