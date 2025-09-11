@@ -3,8 +3,8 @@
 
 
   <xacro:property name="length_bar" value="1" />    <!-- travel along X (m) -->
-  <xacro:property name="thickness_bar" value="0.2" />    <!-- travel along X (m) -->
-  <xacro:property name="width_bar" value="0.2" />    <!-- travel along X (m) -->
+  <xacro:property name="thickness_bar" value="0.02" />    <!-- travel along X (m) -->
+  <xacro:property name="width_bar" value="0.02" />    <!-- travel along X (m) -->
   <xacro:property name="mass_bar" value="1" />    <!-- travel along X (m) -->
 
   <xacro:macro name="bar" params="name parent xyz rpy">
@@ -63,5 +63,6 @@
     rpy="0 0 0" />
   <!-- This is from 3 and 4  -->
 
-
+  <xacro:bar name="xaxis" parent="map" xyz="0 -${length_bar/2} ${length_bar+width_bar}"
+    rpy="0 0 -${pi/2}" />
 </robot>
