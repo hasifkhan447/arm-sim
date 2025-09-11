@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rectangular_gantry">
 
-
   <xacro:property name="length_bar" value="1" />    <!-- travel along X (m) -->
   <xacro:property name="thickness_bar" value="0.02" />    <!-- travel along X (m) -->
   <xacro:property name="width_bar" value="0.02" />    <!-- travel along X (m) -->
   <xacro:property name="mass_bar" value="1" />    <!-- travel along X (m) -->
 
-  <xacro:macro name="bar" params="name parent xyz rpy">
+  <!-- Macro for a bar -->
+  <xacro:macro name="bar" params="name">
     <link name="${name}">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
@@ -30,39 +30,49 @@
         <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0" />
       </inertial>
     </link>
+  </xacro:macro>
 
-    <joint name="${parent}_to_${name}" type="fixed">
+  <!-- Macro for a fixed joint -->
+  <xacro:macro name="fixed_joint" params="parent child xyz rpy">
+    <joint name="${parent}_to_${child}" type="fixed">
       <parent link="${parent}" />
-      <child link="${name}" />
+      <child link="${child}" />
       <origin xyz="${xyz}" rpy="${rpy}" />
     </joint>
   </xacro:macro>
 
-
+  <!-- Base link -->
   <link name="map" />
-  <xacro:bar name="leg1" parent="map" xyz="0 0 ${length_bar/2}" rpy="0 -${pi/2} 0" />
-  <xacro:bar name="leg2" parent="map" xyz="-${length_bar} 0 ${length_bar/2}" rpy="0 -${pi/2} 0" />
 
-  <xacro:bar name="layer1" parent="map" xyz="-${length_bar/2} 0 ${length_bar}"
-    rpy="0 0 0" />
-  <!-- This is from 1 and 2 -->
+  <!-- Bars + joints -->
+  <xacro:bar name="leg1" />
+  <xacro:fixed_joint parent="map" child="leg1" xyz="0 0 ${length_bar/2}" rpy="0 -${pi/2} 0" />
 
-  <xacro:bar name="layer2" parent="map" xyz="-${length_bar} -${length_bar/2} ${length_bar}"
-    rpy="0 0 -${pi/2}" />
-  <!-- This is from 2 and 3  -->
-
-  <xacro:bar name="leg3" parent="map" xyz="-${length_bar} -${length_bar} ${length_bar/2}"
+  <xacro:bar name="leg2" />
+  <xacro:fixed_joint parent="map" child="leg2" xyz="-${length_bar} 0 ${length_bar/2}"
     rpy="0 -${pi/2} 0" />
 
-  <xacro:bar name="layer3" parent="map" xyz="0 -${length_bar/2} ${length_bar}"
+  <xacro:bar name="layer1" />
+  <xacro:fixed_joint parent="map" child="layer1" xyz="-${length_bar/2} 0 ${length_bar}" rpy="0 0 0" />
+
+  <xacro:bar name="layer2" />
+  <xacro:fixed_joint parent="map" child="layer2" xyz="-${length_bar} -${length_bar/2} ${length_bar}"
     rpy="0 0 -${pi/2}" />
 
-  <xacro:bar name="leg4" parent="map" xyz="0 -${length_bar} ${length_bar/2} " rpy="0 -${pi/2} 0" />
+  <xacro:bar name="leg3" />
+  <xacro:fixed_joint parent="map" child="leg3" xyz="-${length_bar} -${length_bar} ${length_bar/2}"
+    rpy="0 -${pi/2} 0" />
 
-  <xacro:bar name="layer4" parent="map" xyz="-${length_bar/2} -${length_bar} ${length_bar}"
+  <xacro:bar name="layer3" />
+  <xacro:fixed_joint parent="map" child="layer3" xyz="0 -${length_bar/2} ${length_bar}"
+    rpy="0 0 -${pi/2}" />
+
+  <xacro:bar name="leg4" />
+  <xacro:fixed_joint parent="map" child="leg4" xyz="0 -${length_bar} ${length_bar/2}"
+    rpy="0 -${pi/2} 0" />
+
+  <xacro:bar name="layer4" />
+  <xacro:fixed_joint parent="map" child="layer4" xyz="-${length_bar/2} -${length_bar} ${length_bar}"
     rpy="0 0 0" />
-  <!-- This is from 3 and 4  -->
 
-  <xacro:bar name="xaxis" parent="map" xyz="0 -${length_bar/2} ${length_bar+width_bar}"
-    rpy="0 0 -${pi/2}" />
 </robot>
