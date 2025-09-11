@@ -80,6 +80,10 @@ RUN apt-get update && apt-get install -y \
     libgz-transport11-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y \
+    ros-humble-joint-state-publisher \
+    ros-humble-joint-state-publisher-gui \
+    && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user
 ARG USERNAME=rosdev
@@ -94,11 +98,13 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 
 
-# Create ROS 2 workspace
+# Create ROS 2 workspace as root
+WORKDIR /home/$USERNAME/workspace
+RUN mkdir -p src && chown -R $USERNAME:$USERNAME /home/$USERNAME
+
+# Now switch to non-root
 USER $USERNAME
 WORKDIR /home/$USERNAME/workspace
-RUN mkdir -p src
-
 
 # Source ROS 2 and Gazebo in .bashrc
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /home/$USERNAME/.bashrc \
