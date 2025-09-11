@@ -1,187 +1,42 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rectangular_gantry">
-  <!-- Params -->
-  <xacro:property name="length_x" value="1.5" />    <!-- travel along X (m) -->
-  <xacro:property name="length_y" value="1.0" />    <!-- travel along Y (m) -->
-  <xacro:property name="height" value="0.2" />    <!-- rail height (m) -->
-  <xacro:property name="rail_w" value="0.06" />   <!-- rail width (m) -->
-  <xacro:property name="base_th" value="0.08" />   <!-- base thickness (m) -->
-  <xacro:property name="car_w" value="0.18" />   <!-- carriage width (m) -->
-  <xacro:property name="car_h" value="0.08" />   <!-- carriage height (m) -->
-  <xacro:property name="mass_base" value="10.0" />
-  <xacro:property name="mass_gantry" value="6.0" />
-  <xacro:property name="mass_carriage" value="1.0" />
 
-  <!-- Inertial helper macro (simple box inertia approx) -->
-  <xacro:macro name="box_inertial" params="nx ny nz mass">
-    <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <mass value="${mass}" />
-      <!-- very rough inertia (diagonal) -->
-      <inertia ixx="${(1.0/12.0)*mass*(ny*ny + nz*nz)}"
-        ixy="0" ixz="0"
-        iyy="${(1.0/12.0)*mass*(nx*nx + nz*nz)}"
-        iyz="0"
-        izz="${(1.0/12.0)*mass*(nx*nx + ny*ny)}" />
-    </inertial>
-  </xacro:macro>
 
+  <xacro:property name="length_leg" value="1" />    <!-- travel along X (m) -->
+  <xacro:property name="thickness_leg" value="0.2" />    <!-- travel along X (m) -->
+  <xacro:property name="width_leg" value="0.2" />    <!-- travel along X (m) -->
+  <xacro:property name="mass_leg" value="1" />    <!-- travel along X (m) -->
 
   <link name="map" />
-  <joint name="map_to_base" type="fixed">
+  <joint name="map_to_leg1" type="fixed">
     <parent link="map" />
-    <child link="base_link" />
+    <child link="leg1" />
     <origin xyz="0 0 0" rpy="0 0 0" />
   </joint>
 
 
-  <!-- Base link -->
-  <link name="base_link">
+  <link name="leg1">
     <visual>
-      <origin xyz="0 0 ${-base_th/2}" rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 -${pi/2} 0" />
       <geometry>
-        <box size="${length_x} ${length_y} ${base_th}" />
+        <box size="${length_leg} ${width_leg} ${thickness_leg}" />
       </geometry>
       <material name="gray">
         <color rgba="0.6 0.6 0.6 1.0" />
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 ${-base_th/2}" rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 -${pi/2} 0" />
       <geometry>
-        <box size="${length_x} ${length_y} ${base_th}" />
+        <box size="${length_leg} ${width_leg} ${thickness_leg}" />
       </geometry>
     </collision>
     <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <mass value="${mass_base}" />
+      <origin xyz="0 0 0" rpy="0 -${pi/2} 0" />
+      <mass value="${mass_leg}" />
       <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0" />
     </inertial>
   </link>
 
-  <!-- Gantry (moves in Y) -->
-  <link name="gantry_y_link">
-    <visual>
-      <!-- two parallel X-rails (left & right) -->
-      <origin xyz="0 ${length_y/2 - rail_w/2} ${height/2}" rpy="0 0 0" />
-      <geometry>
-        <box size="${length_x} ${rail_w} ${height}" />
-      </geometry>
-      <material name="dark">
-        <color rgba="0.3 0.3 0.3 1.0" />
-      </material>
-    </visual>
-    <visual>
-      <origin xyz="0 ${- (length_y/2 - rail_w/2)} ${height/2}" rpy="0 0 0" />
-      <geometry>
-        <box size="${length_x} ${rail_w} ${height}" />
-      </geometry>
-      <material name="dark" />
-    </visual>
-    <collision>
-      <origin xyz="0 ${length_y/2 - rail_w/2} ${height/2}" rpy="0 0 0" />
-      <geometry>
-        <box size="${length_x} ${rail_w} ${height}" />
-      </geometry>
-    </collision>
-    <collision>
-      <origin xyz="0 ${- (length_y/2 - rail_w/2)} ${height/2}" rpy="0 0 0" />
-      <geometry>
-        <box size="${length_x} ${rail_w} ${height}" />
-      </geometry>
-    </collision>
-    <inertial>
-      <origin xyz="0 0 ${height/2}" rpy="0 0 0" />
-      <mass value="${mass_gantry}" />
-      <inertia ixx="0.5" ixy="0" ixz="0" iyy="0.5" iyz="0" izz="0.5" />
-    </inertial>
-  </link>
 
-  <!-- Joint: gantry sliding along Y relative to base -->
-  <joint name="gantry_y_prismatic" type="prismatic">
-    <parent link="base_link" />
-    <child link="gantry_y_link" />
-    <origin xyz="0 0 0" rpy="0 0 0" />
-    <axis xyz="0 1 0" />
-    <limit lower="${-length_y/2}" upper="${length_y/2}" effort="1000" velocity="0.5" />
-  </joint>
-
-  <!-- Carriage (moves along X, attached to gantry_y_link) -->
-  <link name="carriage_link">
-    <visual>
-      <origin xyz="0 0 ${car_h/2 + height/2}" rpy="0 0 0" />
-      <geometry>
-        <box size="${car_w} ${rail_w*2 + 0.02} ${car_h}" />
-      </geometry>
-      <material name="blue">
-        <color rgba="0.2 0.4 0.8 1.0" />
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 0 ${car_h/2 + height/2}" rpy="0 0 0" />
-      <geometry>
-        <box size="${car_w} ${rail_w*2 + 0.02} ${car_h}" />
-      </geometry>
-    </collision>
-    <inertial>
-      <origin xyz="0 0 ${car_h/2 + height/2}" rpy="0 0 0" />
-      <mass value="${mass_carriage}" />
-      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
-    </inertial>
-  </link>
-
-  <!-- Joint: carriage sliding along X on top of gantry -->
-  <joint name="carriage_x_prismatic" type="prismatic">
-    <parent link="gantry_y_link" />
-    <child link="carriage_link" />
-    <!-- place carriage initially centered -->
-    <origin xyz="0 0 0" rpy="0 0 0" />
-    <axis xyz="1 0 0" />
-    <limit lower="${-length_x/2}" upper="${length_x/2}" effort="500" velocity="0.6" />
-  </joint>
-
-  <!-- Optional tool mount on carriage -->
-  <link name="tool_mount">
-    <visual>
-      <origin xyz="0 0 ${-car_h/2}" rpy="0 0 0" />
-      <geometry>
-        <cylinder length="0.05" radius="0.02" />
-      </geometry>
-      <material name="red">
-        <color rgba="0.8 0.2 0.2 1.0" />
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 0 ${-car_h/2}" rpy="0 0 0" />
-      <geometry>
-        <cylinder length="0.05" radius="0.02" />
-      </geometry>
-    </collision>
-    <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <mass value="0.1" />
-      <inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4" />
-    </inertial>
-  </link>
-  <joint name="carriage_tool_fixed" type="fixed">
-    <parent link="carriage_link" />
-    <child link="tool_mount" />
-    <origin xyz="0 0 ${-car_h/2}" rpy="0 0 0" />
-  </joint>
-
-  <!-- Gazebo-friendly transmission hints (optional) -->
-  <xacro:property name="controller_namespace" value="" />
-  <transmission name="gantry_y_trans">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="gantry_y_prismatic" />
-    <actuator name="gantry_y_motor" />
-  </transmission>
-  <transmission name="carriage_x_trans">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="carriage_x_prismatic" />
-    <actuator name="carriage_x_motor" />
-  </transmission>
-
-
-  <!-- End -->
 </robot>
