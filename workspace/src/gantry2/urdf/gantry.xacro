@@ -7,12 +7,12 @@
   <xacro:property name="mass_bar" value="1" />    <!-- travel along X (m) -->
 
   <!-- Macro for a bar -->
-  <xacro:macro name="bar" params="name">
+  <xacro:macro name="bar" params="name length width thickness">
     <link name="${name}">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <box size="${length_bar} ${width_bar} ${thickness_bar}" />
+          <box size="${length} ${width} ${thickness}" />
         </geometry>
         <material name="gray">
           <color rgba="0.6 0.6 0.6 1.0" />
@@ -21,7 +21,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <box size="${length_bar} ${width_bar} ${thickness_bar}" />
+          <box size="${length} ${width} ${thickness}" />
         </geometry>
       </collision>
       <inertial>
@@ -56,37 +56,37 @@
   <link name="map" />
 
   <!-- Bars + joints -->
-  <xacro:bar name="leg1" />
+  <xacro:bar name="leg1" length="${length_bar}" width="${width_bar}" thickness="${thickness_bar}" />
   <xacro:fixed_joint parent="map" child="leg1" xyz="0 0 ${length_bar/2}" rpy="0 -${pi/2} 0" />
 
-  <xacro:bar name="leg2" />
+  <xacro:bar name="leg2" length="${length_bar}" width="${width_bar}" thickness="${thickness_bar}" />
   <xacro:fixed_joint parent="map" child="leg2" xyz="-${length_bar} 0 ${length_bar/2}"
     rpy="0 -${pi/2} 0" />
 
-  <xacro:bar name="layer1" />
+  <xacro:bar name="layer1" length="${length_bar}" width="${width_bar}" thickness="${thickness_bar}" />
   <xacro:fixed_joint parent="map" child="layer1" xyz="-${length_bar/2} 0 ${length_bar}" rpy="0 0 0" />
 
-  <xacro:bar name="layer2" />
+  <xacro:bar name="layer2" length="${length_bar}" width="${width_bar}" thickness="${thickness_bar}" />
   <xacro:fixed_joint parent="map" child="layer2" xyz="-${length_bar} -${length_bar/2} ${length_bar}"
     rpy="0 0 -${pi/2}" />
 
-  <xacro:bar name="leg3" />
+  <xacro:bar name="leg3" length="${length_bar}" width="${width_bar}" thickness="${thickness_bar}" />
   <xacro:fixed_joint parent="map" child="leg3" xyz="-${length_bar} -${length_bar} ${length_bar/2}"
     rpy="0 -${pi/2} 0" />
 
-  <xacro:bar name="layer3" />
+  <xacro:bar name="layer3" length="${length_bar}" width="${width_bar}" thickness="${thickness_bar}" />
   <xacro:fixed_joint parent="map" child="layer3" xyz="0 -${length_bar/2} ${length_bar}"
     rpy="0 0 -${pi/2}" />
 
-  <xacro:bar name="leg4" />
+  <xacro:bar name="leg4" length="${length_bar}" width="${width_bar}" thickness="${thickness_bar}" />
   <xacro:fixed_joint parent="map" child="leg4" xyz="0 -${length_bar} ${length_bar/2}"
     rpy="0 -${pi/2} 0" />
 
-  <xacro:bar name="layer4" />
+  <xacro:bar name="layer4" length="${length_bar}" width="${width_bar}" thickness="${thickness_bar}" />
   <xacro:fixed_joint parent="map" child="layer4" xyz="-${length_bar/2} -${length_bar} ${length_bar}"
     rpy="0 0 0" />
 
-  <xacro:bar name="xaxis" />
+  <xacro:bar name="xaxis" length="${length_bar}" width="${width_bar}" thickness="${thickness_bar}" />
   <xacro:prismatic_joint parent="map" child="xaxis"
     xyz="0 -${length_bar/2} ${length_bar}"
     rpy="0 0 -${pi/2}"
@@ -94,7 +94,7 @@
     lower="-${length_bar}" upper="0" />
 
   <!-- Make the below small the dimensions of ${width_bar} ${width_bar} ${width_bar} -->
-  <xacro:bar name="yaxis" />
+  <xacro:bar name="yaxis" length="${length_bar}" width="${width_bar}" thickness="${thickness_bar}" />
   <xacro:prismatic_joint parent="xaxis" child="yaxis"
     xyz="${width_bar} 0 0"
     rpy="0 -${pi/2} 0"
