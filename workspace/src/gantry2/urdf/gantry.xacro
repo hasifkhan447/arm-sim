@@ -42,12 +42,26 @@
   <link name="map" />
   <xacro:bar name="leg1" parent="map" xyz="0 0 ${length_bar/2}" rpy="0 -${pi/2} 0" />
   <xacro:bar name="leg2" parent="map" xyz="-${length_bar} 0 ${length_bar/2}" rpy="0 -${pi/2} 0" />
+
+  <xacro:bar name="layer1" parent="map" xyz="-${length_bar/2} 0 ${length_bar}"
+    rpy="0 0 0" />
+  <!-- This is from 1 and 2 -->
+
+  <xacro:bar name="layer2" parent="map" xyz="-${length_bar} -${length_bar/2} ${length_bar}"
+    rpy="0 0 -${pi/2}" />
+  <!-- This is from 2 and 3  -->
+
   <xacro:bar name="leg3" parent="map" xyz="-${length_bar} -${length_bar} ${length_bar/2}"
     rpy="0 -${pi/2} 0" />
 
+  <xacro:bar name="layer3" parent="map" xyz="0 -${length_bar/2} ${length_bar}"
+    rpy="0 0 -${pi/2}" />
+
   <xacro:bar name="leg4" parent="map" xyz="0 -${length_bar} ${length_bar/2} " rpy="0 -${pi/2} 0" />
 
-  <xacro:bar name="layer1" parent="map" xyz="-${length_bar/2} -${length_bar} ${length_bar}"
+  <xacro:bar name="layer4" parent="map" xyz="-${length_bar/2} -${length_bar} ${length_bar}"
     rpy="0 0 0" />
+  <!-- This is from 3 and 4  -->
+
 
 </robot>
