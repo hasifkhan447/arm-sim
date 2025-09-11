@@ -2,41 +2,48 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rectangular_gantry">
 
 
-  <xacro:property name="length_leg" value="1" />    <!-- travel along X (m) -->
-  <xacro:property name="thickness_leg" value="0.2" />    <!-- travel along X (m) -->
-  <xacro:property name="width_leg" value="0.2" />    <!-- travel along X (m) -->
-  <xacro:property name="mass_leg" value="1" />    <!-- travel along X (m) -->
+  <xacro:property name="length_bar" value="1" />    <!-- travel along X (m) -->
+  <xacro:property name="thickness_bar" value="0.2" />    <!-- travel along X (m) -->
+  <xacro:property name="width_bar" value="0.2" />    <!-- travel along X (m) -->
+  <xacro:property name="mass_bar" value="1" />    <!-- travel along X (m) -->
+
+  <xacro:macro name="bar" params="name parent xyz rpy">
+    <link name="${name}">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${length_bar} ${width_bar} ${thickness_bar}" />
+        </geometry>
+        <material name="gray">
+          <color rgba="0.6 0.6 0.6 1.0" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${length_bar} ${width_bar} ${thickness_bar}" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="${mass_bar}" />
+        <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0" />
+      </inertial>
+    </link>
+
+    <joint name="${parent}_to_${name}" type="fixed">
+      <parent link="${parent}" />
+      <child link="${name}" />
+      <origin xyz="${xyz}" rpy="${rpy}" />
+    </joint>
+  </xacro:macro>
+
 
   <link name="map" />
-  <joint name="map_to_leg1" type="fixed">
-    <parent link="map" />
-    <child link="leg1" />
-    <origin xyz="0 0 0" rpy="0 0 0" />
-  </joint>
-
-
-  <link name="leg1">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 -${pi/2} 0" />
-      <geometry>
-        <box size="${length_leg} ${width_leg} ${thickness_leg}" />
-      </geometry>
-      <material name="gray">
-        <color rgba="0.6 0.6 0.6 1.0" />
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 -${pi/2} 0" />
-      <geometry>
-        <box size="${length_leg} ${width_leg} ${thickness_leg}" />
-      </geometry>
-    </collision>
-    <inertial>
-      <origin xyz="0 0 0" rpy="0 -${pi/2} 0" />
-      <mass value="${mass_leg}" />
-      <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0" />
-    </inertial>
-  </link>
+  <xacro:bar name="bar1" parent="map" xyz="0 0 0" rpy="0 -${pi/2} 0" />
+  <xacro:bar name="bar2" parent="map" xyz="-${length_bar} 0 0" rpy="0 -${pi/2} 0" />
+  <xacro:bar name="bar3" parent="map" xyz="-${length_bar} -${length_bar} 0" rpy="0 -${pi/2} 0" />
+  <xacro:bar name="bar4" parent="map" xyz="0 -${length_bar} 0" rpy="0 -${pi/2} 0" />
 
 
 </robot>
