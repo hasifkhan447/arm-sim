@@ -93,5 +93,12 @@
     axis="0 1 0"
     lower="-${length_bar}" upper="0" />
 
+  <!-- Make the below small the dimensions of ${width_bar} ${width_bar} ${width_bar} -->
+  <xacro:bar name="yaxis" />
+  <xacro:prismatic_joint parent="xaxis" child="yaxis"
+    xyz="${width_bar} 0 0"
+    rpy="0 -${pi/2} 0"
+    axis="0 0 1"
+    lower="-${length_bar/2}" upper="${length_bar/2}" />
 
 </robot>
