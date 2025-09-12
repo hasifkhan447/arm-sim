@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rectangular_gantry">
+    <xacro:arg name="initial_positions_file" default="initial_positions.yaml" />
+
+    <!-- Import rectangular_gantry urdf file -->
+    <xacro:include filename="$(find gantry2)/urdf/gantry.xacro" />
+
+    <!-- Import control_xacro -->
+    <xacro:include filename="rectangular_gantry.ros2_control.xacro" />
+
+
+    <xacro:rectangular_gantry_ros2_control name="FakeSystem" initial_positions_file="$(arg initial_positions_file)"/>
+
+</robot>

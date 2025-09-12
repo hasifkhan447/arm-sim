@@ -1,0 +1,6 @@
+# Default initial positions for rectangular_gantry's ros2_control fake system
+
+initial_positions:
+  map_to_xaxis: 0
+  xaxis_to_yaxis: 0
+  yaxis_to_zaxis: 0

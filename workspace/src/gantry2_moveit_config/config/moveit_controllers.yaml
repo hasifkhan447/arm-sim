@@ -1,0 +1,14 @@
+# MoveIt uses this configuration for controller management
+
+moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
+
+moveit_simple_controller_manager:
+  controller_names:
+    - axes_controller
+
+  axes_controller:
+    type: FollowJointTrajectory
+    joints:
+      - map_to_xaxis
+      - xaxis_to_yaxis
+      - yaxis_to_zaxis
