@@ -7,6 +7,7 @@ from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEve
 from launch.event_handlers import OnProcessExit
 from launch_ros.actions import Node 
 import xacro 
+from moveit_configs_utils import MoveItConfigsBuilder
 
 def generate_launch_description():
     package_path = os.path.join(
@@ -32,6 +33,28 @@ def generate_launch_description():
             get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py'
         ])
     )
+
+    moveit_config = (
+        MoveItConfigsBuilder("gantry2")
+        .robot_description(
+            file_path="config/rectangular_gantry.urdf.xacro",
+            # mappings={
+            #     "ros2_control_hardware_type": "mock_components"
+            # },
+        )
+        .robot_description_semantic(
+            file_path="config/rectangular_gantry.srdf"
+        )
+
+        .trajectory_execution(file_path="config/moveit_controllers.yaml")
+        .planning_scene_monitor(
+            publish_robot_description=True, publish_robot_description_semantic=True
+        )
+        .planning_pipelines(pipelines=["ompl"])
+        .to_moveit_configs()
+    )
+
+
 
 
     node_robot_state_publisher = Node(
@@ -73,6 +96,31 @@ def generate_launch_description():
         ]
     )
 
+    run_move_group_node = Node(
+        package="moveit_ros_move_group",
+        executable="move_group",
+        output="screen",
+        parameters=[
+            moveit_config.to_dict(),
+            {'use_sim_time': True}  # <-- ADD THIS LINE
+        ],
+    )
+
+    rviz_node_launch = Node(
+        package="rviz2",
+        executable="rviz2",
+        name='rviz2',
+        output='screen',
+        arguments=['-d', rviz_config_path],
+        parameters=[
+            {'use_sim_time': True},
+            moveit_config.joint_limits,
+            moveit_config.robot_description_kinematics
+        ]
+    )
+
+
+
 
 
     return LaunchDescription([
@@ -92,10 +140,9 @@ def generate_launch_description():
 
         gazebo,
         node_robot_state_publisher,
-        spawn_entity
-
-
-
+        spawn_entity,
+        run_move_group_node,
+        rviz_node_launch
     ])
 
 
