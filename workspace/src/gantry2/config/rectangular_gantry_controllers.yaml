@@ -1,0 +1,73 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 1000
+
+    arm_group_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+      joints:
+        - joint_a1
+        - joint_a2
+        - joint_a3
+      state_interfaces:
+        - position
+        - velocity
+        - effort
+
+# Broadcaster for joint_a1 force-torque sensor
+    joint_a1_ft_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+
+    # Broadcaster for joint_a2 force-torque sensor
+    joint_a2_ft_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+
+    # Broadcaster for joint_a3 force-torque sensor
+    joint_a3_ft_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+    # Broadcaster for joint_a4 force-torque sensor
+
+joint_a1_ft_broadcaster:
+    ros__parameters:
+      sensor_name: joint_a1_force_torque
+      frame_id: joint_a1
+      topic_name: /joint_a1_force_torque
+
+
+
+joint_a2_ft_broadcaster:
+    ros__parameters:
+      sensor_name: joint_a2_force_torque
+      frame_id: joint_a2
+      topic_name: /joint_a2_force_torque
+
+
+joint_a3_ft_broadcaster:
+    ros__parameters:
+      sensor_name: joint_a3_force_torque
+      frame_id: joint_a3
+      topic_name: /joint_a3_force_torque
+
+
+
+arm_group_controller:
+  ros__parameters:
+    command_interfaces:
+      - position
+
+    state_interfaces:
+      - position
+      - velocity
+
+    joints:
+      - joint_a1
+      - joint_a2
+      - joint_a3
+    gains:
+      joint_a1: {p: 10.0, i: 0.01, d: 1.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
+      joint_a2: {p: 10.0, i: 0.01, d: 1.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
+      joint_a3: {p: 10.0, i: 0.01, d: 1.0, i_clamp: 0.1, ff_velocity_scale: 1.0}
+    open_loop_control: false
+
