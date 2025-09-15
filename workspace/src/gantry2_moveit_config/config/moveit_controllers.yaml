@@ -4,9 +4,9 @@ moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControll
 
 moveit_simple_controller_manager:
   controller_names:
-    - axes_controller
+    - prismatic_chain_controller
 
-  axes_controller:
+  prismatic_chain_controller:
     type: FollowJointTrajectory
     joints:
       - map_to_xaxis

@@ -5,9 +5,9 @@ moveit_setup_assistant_config:
   srdf:
     relative_path: config/rectangular_gantry.srdf
   package_settings:
-    author_name: ""
-    author_email: ""
-    generated_timestamp: 1757586271
+    author_name: Hamad Asif Khan
+    author_email: hk08394@st.habib.edu.pk
+    generated_timestamp: 1757928150
   control_xacro:
     command:
       - position
