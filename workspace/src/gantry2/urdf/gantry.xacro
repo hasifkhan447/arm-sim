@@ -119,10 +119,10 @@
     </hardware>
 
 
-    <joint name="joint_a1">
+    <joint name="map_to_xaxis">
       <!--<command_interface
       name="position"/>-->
-      <command_interface name="position_pid" />
+      <command_interface name="position" />
       <command_interface name="effort" />
       <state_interface name="position">
         <param name="initial_value">0.0</param>
@@ -131,10 +131,10 @@
     </joint>
 
 
-    <joint name="joint_a2">
+    <joint name="xaxis_to_yaxis">
       <!--<command_interface
       name="position"/>-->
-      <command_interface name="position_pid" />
+      <command_interface name="position" />
       <command_interface name="effort" />
       <state_interface name="position">
         <param name="initial_value">0.0</param>
@@ -143,10 +143,10 @@
     </joint>
 
 
-    <joint name="joint_a3">
+    <joint name="yaxis_to_zaxis">
       <!--<command_interface
       name="position"/>-->
-      <command_interface name="position_pid" />
+      <command_interface name="position" />
       <command_interface name="effort" />
       <state_interface name="position">
         <param name="initial_value">0.0</param>
@@ -194,7 +194,7 @@
   </gazebo>
 
 
-  <gazebo reference="joint_a1">
+  <gazebo reference="map_to_xaxis">
     <sensor name="joint_a1_force_torque" type="force_torque">
       <always_on>true</always_on>
       <update_rate>100.0</update_rate>
@@ -206,7 +206,7 @@
     </sensor>
   </gazebo>
 
-  <gazebo reference="joint_a2">
+  <gazebo reference="xaxis_to_yaxis">
     <sensor name="joint_a2_force_torque" type="force_torque">
       <always_on>true</always_on>
       <update_rate>100.0</update_rate>
@@ -218,7 +218,7 @@
     </sensor>
   </gazebo>
 
-  <gazebo reference="joint_a3">
+  <gazebo reference="yaxis_to_zaxis">
     <sensor name="joint_a3_force_torque" type="force_torque">
       <always_on>true</always_on>
       <update_rate>100.0</update_rate>
