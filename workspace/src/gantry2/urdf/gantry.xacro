@@ -112,4 +112,122 @@
     lower="-${length_bar/2}" upper="${length_bar/2}" />
 
 
+  <ros2_control name="GazeboSimSystem" type="system">
+
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+
+
+    <joint name="joint_a1">
+      <!--<command_interface
+      name="position"/>-->
+      <command_interface name="position_pid" />
+      <command_interface name="effort" />
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity" />
+    </joint>
+
+
+    <joint name="joint_a2">
+      <!--<command_interface
+      name="position"/>-->
+      <command_interface name="position_pid" />
+      <command_interface name="effort" />
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity" />
+    </joint>
+
+
+    <joint name="joint_a3">
+      <!--<command_interface
+      name="position"/>-->
+      <command_interface name="position_pid" />
+      <command_interface name="effort" />
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity" />
+    </joint>
+
+
+    <sensor name="joint_a1_force_torque">
+      <state_interface name="force.x" />
+      <state_interface name="force.y" />
+      <state_interface name="force.z" />
+      <state_interface name="torque.x" />
+      <state_interface name="torque.y" />
+      <state_interface name="torque.z" />
+    </sensor>
+
+    <sensor name="joint_a2_force_torque">
+      <state_interface name="force.x" />
+      <state_interface name="force.y" />
+      <state_interface name="force.z" />
+      <state_interface name="torque.x" />
+      <state_interface name="torque.y" />
+      <state_interface name="torque.z" />
+    </sensor>
+
+    <sensor name="joint_a3_force_torque">
+      <state_interface name="force.x" />
+      <state_interface name="force.y" />
+      <state_interface name="force.z" />
+      <state_interface name="torque.x" />
+      <state_interface name="torque.y" />
+      <state_interface name="torque.z" />
+    </sensor>
+
+
+  </ros2_control>
+
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <!-- <parameters>$(find six_dof_arm)/config/six_dof_arm_controllers.yaml</parameters> -->
+      <parameters>$(find gantry2_moveit_config)/config/ros2_controllers.yaml</parameters>
+    </plugin>
+
+  </gazebo>
+
+
+  <gazebo reference="joint_a1">
+    <sensor name="joint_a1_force_torque" type="force_torque">
+      <always_on>true</always_on>
+      <update_rate>100.0</update_rate>
+      <visualize>true</visualize>
+      <force_torque>
+        <frame>sensor</frame>
+        <measure_direction>child_to_parent</measure_direction>
+      </force_torque>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="joint_a2">
+    <sensor name="joint_a2_force_torque" type="force_torque">
+      <always_on>true</always_on>
+      <update_rate>100.0</update_rate>
+      <visualize>true</visualize>
+      <force_torque>
+        <frame>sensor</frame>
+        <measure_direction>child_to_parent</measure_direction>
+      </force_torque>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="joint_a3">
+    <sensor name="joint_a3_force_torque" type="force_torque">
+      <always_on>true</always_on>
+      <update_rate>100.0</update_rate>
+      <visualize>true</visualize>
+      <force_torque>
+        <frame>sensor</frame>
+        <measure_direction>child_to_parent</measure_direction>
+      </force_torque>
+    </sensor>
+  </gazebo>
+
 </robot>

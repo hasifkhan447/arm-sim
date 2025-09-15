@@ -12,3 +12,5 @@ moveit_simple_controller_manager:
       - map_to_xaxis
       - xaxis_to_yaxis
       - yaxis_to_zaxis
+    action_ns: follow_joint_trajectory
+    default: true
