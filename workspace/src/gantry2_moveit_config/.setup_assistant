@@ -7,7 +7,7 @@ moveit_setup_assistant_config:
   package_settings:
     author_name: Hamad Asif Khan
     author_email: hk08394@st.habib.edu.pk
-    generated_timestamp: 1757928150
+    generated_timestamp: 1757929877
   control_xacro:
     command:
       - position
