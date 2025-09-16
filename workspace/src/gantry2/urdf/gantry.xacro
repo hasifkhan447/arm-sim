@@ -113,17 +113,26 @@
 
   <link name="eemount">
     <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <cylinder length="0.01" radius="0.05" />
       </geometry>
     </visual>
 
     <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <cylinder length="0.01" radius="0.05" />
       </geometry>
     </collision>
+
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="${mass_bar}" />
+      <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0" />
+    </inertial>
   </link>
+
 
   <joint name="zaxis_to_eemount" type="revolute">
     <parent link="zaxis" />
@@ -144,7 +153,7 @@
       <!--<command_interface
       name="position"/>-->
       <command_interface name="position" />
-      <command_interface name="effort" />
+      <!-- <command_interface name="effort" /> -->
       <state_interface name="position">
         <param name="initial_value">0.0</param>
       </state_interface>
@@ -156,7 +165,7 @@
       <!--<command_interface
       name="position"/>-->
       <command_interface name="position" />
-      <command_interface name="effort" />
+      <!-- <command_interface name="effort" /> -->
       <state_interface name="position">
         <param name="initial_value">0.0</param>
       </state_interface>
@@ -168,7 +177,7 @@
       <!--<command_interface
       name="position"/>-->
       <command_interface name="position" />
-      <command_interface name="effort" />
+      <!-- <command_interface name="effort" /> -->
       <state_interface name="position">
         <param name="initial_value">0.0</param>
       </state_interface>
@@ -179,7 +188,7 @@
       <!--<command_interface
       name="position"/>-->
       <command_interface name="position" />
-      <command_interface name="effort" />
+      <!-- <command_interface name="effort" /> -->
       <state_interface name="position">
         <param name="initial_value">0.0</param>
       </state_interface>
