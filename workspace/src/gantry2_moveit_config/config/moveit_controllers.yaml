@@ -5,6 +5,7 @@ moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControll
 moveit_simple_controller_manager:
   controller_names:
     - prismatic_chain_controller
+    - ee_controller
 
   prismatic_chain_controller:
     type: FollowJointTrajectory
@@ -14,3 +15,7 @@ moveit_simple_controller_manager:
       - yaxis_to_zaxis
     action_ns: follow_joint_trajectory
     default: true
+  ee_controller:
+    type: FollowJointTrajectory
+    joints:
+      - zaxis_to_eemount

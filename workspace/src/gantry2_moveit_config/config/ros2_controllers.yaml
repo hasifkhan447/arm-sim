@@ -7,6 +7,10 @@ controller_manager:
       type: joint_trajectory_controller/JointTrajectoryController
 
 
+    ee_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
@@ -16,6 +20,15 @@ prismatic_chain_controller:
       - map_to_xaxis
       - xaxis_to_yaxis
       - yaxis_to_zaxis
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+ee_controller:
+  ros__parameters:
+    joints:
+      - zaxis_to_eemount
     command_interfaces:
       - position
     state_interfaces:

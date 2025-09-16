@@ -29,6 +29,13 @@
                 </state_interface>
                 <state_interface name="velocity"/>
             </joint>
+            <joint name="zaxis_to_eemount">
+                <command_interface name="position"/>
+                <state_interface name="position">
+                  <param name="initial_value">${initial_positions['zaxis_to_eemount']}</param>
+                </state_interface>
+                <state_interface name="velocity"/>
+            </joint>
 
         </ros2_control>
     </xacro:macro>

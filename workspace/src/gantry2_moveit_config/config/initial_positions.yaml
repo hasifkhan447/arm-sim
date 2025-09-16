@@ -4,3 +4,4 @@ initial_positions:
   map_to_xaxis: 0
   xaxis_to_yaxis: 0
   yaxis_to_zaxis: 0
+  zaxis_to_eemount: 0
