@@ -76,6 +76,15 @@ def generate_launch_description():
         output='screen'
     )
 
+
+    load_ee_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+             '--set-state', 'active', 'ee_controller'],
+        output='screen'
+    )
+
+
+
     spawn_entity = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
@@ -137,6 +146,15 @@ def generate_launch_description():
                 on_exit=[load_arm_controller]
             )
         ),
+
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_arm_controller,
+                on_exit=[load_ee_controller]
+            )
+        ),
+
+
 
         gazebo,
         node_robot_state_publisher,
