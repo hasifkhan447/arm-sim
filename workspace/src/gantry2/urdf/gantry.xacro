@@ -3,7 +3,6 @@
 
 
   <xacro:include filename="$(find gantry2)/urdf/bars.xacro" />
-
   <xacro:include filename="$(find gantry2)/urdf/ee1.xacro" />
   <xacro:include filename="$(find gantry2)/urdf/ros2_control.xacro" />
 
