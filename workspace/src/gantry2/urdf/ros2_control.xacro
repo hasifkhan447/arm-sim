@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ros2_control hardware system -->
+  <ros2_control name="GazeboSimSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+
+    <!-- Joints -->
+    <joint name="map_to_xaxis">
+      <command_interface name="position" />
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity" />
+    </joint>
+
+    <joint name="xaxis_to_yaxis">
+      <command_interface name="position" />
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity" />
+    </joint>
+
+    <joint name="yaxis_to_zaxis">
+      <command_interface name="position" />
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity" />
+    </joint>
+
+    <joint name="zaxis_to_eemount">
+      <command_interface name="position" />
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity" />
+    </joint>
+
+    <!-- Force/Torque Sensors -->
+    <sensor name="joint_a1_force_torque">
+      <state_interface name="force.x" />
+      <state_interface name="force.y" />
+      <state_interface name="force.z" />
+      <state_interface name="torque.x" />
+      <state_interface name="torque.y" />
+      <state_interface name="torque.z" />
+    </sensor>
+
+    <sensor name="joint_a2_force_torque">
+      <state_interface name="force.x" />
+      <state_interface name="force.y" />
+      <state_interface name="force.z" />
+      <state_interface name="torque.x" />
+      <state_interface name="torque.y" />
+      <state_interface name="torque.z" />
+    </sensor>
+
+    <sensor name="joint_a3_force_torque">
+      <state_interface name="force.x" />
+      <state_interface name="force.y" />
+      <state_interface name="force.z" />
+      <state_interface name="torque.x" />
+      <state_interface name="torque.y" />
+      <state_interface name="torque.z" />
+    </sensor>
+  </ros2_control>
+
+  <!-- Gazebo plugin for ros2_control -->
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <parameters>$(find gantry2_moveit_config)/config/ros2_controllers.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+  <!-- Gazebo FT Sensors -->
+  <gazebo reference="map_to_xaxis">
+    <sensor name="joint_a1_force_torque" type="force_torque">
+      <always_on>true</always_on>
+      <update_rate>100.0</update_rate>
+      <visualize>true</visualize>
+      <force_torque>
+        <frame>sensor</frame>
+        <measure_direction>child_to_parent</measure_direction>
+      </force_torque>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="xaxis_to_yaxis">
+    <sensor name="joint_a2_force_torque" type="force_torque">
+      <always_on>true</always_on>
+      <update_rate>100.0</update_rate>
+      <visualize>true</visualize>
+      <force_torque>
+        <frame>sensor</frame>
+        <measure_direction>child_to_parent</measure_direction>
+      </force_torque>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="yaxis_to_zaxis">
+    <sensor name="joint_a3_force_torque" type="force_torque">
+      <always_on>true</always_on>
+      <update_rate>100.0</update_rate>
+      <visualize>true</visualize>
+      <force_torque>
+        <frame>sensor</frame>
+        <measure_direction>child_to_parent</measure_direction>
+      </force_torque>
+    </sensor>
+  </gazebo>
+
+</robot>
