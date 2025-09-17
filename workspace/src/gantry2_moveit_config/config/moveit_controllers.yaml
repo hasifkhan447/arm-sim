@@ -13,10 +13,11 @@ moveit_simple_controller_manager:
       - map_to_xaxis
       - xaxis_to_yaxis
       - yaxis_to_zaxis
+      - zaxis_to_eemount
     action_ns: follow_joint_trajectory
   ee_controller:
     type: FollowJointTrajectory
-    action_ns: follow_joint_trajectory
     joints:
-      - zaxis_to_eemount
-    default: true
+      - gripper_left_joint
+      - gripper_right_joint
+    action_ns: follow_joint_trajectory

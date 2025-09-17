@@ -20,6 +20,7 @@ prismatic_chain_controller:
       - map_to_xaxis
       - xaxis_to_yaxis
       - yaxis_to_zaxis
+      - zaxis_to_eemount
     command_interfaces:
       - position
     state_interfaces:
@@ -28,7 +29,8 @@ prismatic_chain_controller:
 ee_controller:
   ros__parameters:
     joints:
-      - zaxis_to_eemount
+      - gripper_left_joint
+      - gripper_right_joint
     command_interfaces:
       - position
     state_interfaces:
