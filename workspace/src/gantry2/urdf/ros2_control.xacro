@@ -7,7 +7,9 @@
       <plugin>gazebo_ros2_control/GazeboSystem</plugin>
     </hardware>
 
-    <!-- Joints -->
+    <!--
+    ======================================================================================================================================== -->
+    <!-- Gantry part -->
     <joint name="map_to_xaxis">
       <command_interface name="position" />
       <state_interface name="position">
@@ -32,15 +34,6 @@
       <state_interface name="velocity" />
     </joint>
 
-    <joint name="zaxis_to_eemount">
-      <command_interface name="position" />
-      <state_interface name="position">
-        <param name="initial_value">0.0</param>
-      </state_interface>
-      <state_interface name="velocity" />
-    </joint>
-
-    <!-- Force/Torque Sensors -->
     <sensor name="joint_a1_force_torque">
       <state_interface name="force.x" />
       <state_interface name="force.y" />
@@ -67,16 +60,44 @@
       <state_interface name="torque.y" />
       <state_interface name="torque.z" />
     </sensor>
+    <!--
+    ======================================================================================================================================== -->
+    <!-- Gantry part -->
+
+
+    <!--
+    ======================================================================================================================================== -->
+    <!-- End effector part -->
+
+
+    <joint name="zaxis_to_eemount">
+      <command_interface name="position" />
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity" />
+    </joint>
+
+
+    <!--
+    ======================================================================================================================================== -->
+    <!-- End effector part -->
+
+
   </ros2_control>
 
-  <!-- Gazebo plugin for ros2_control -->
   <gazebo>
     <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
       <parameters>$(find gantry2_moveit_config)/config/ros2_controllers.yaml</parameters>
     </plugin>
   </gazebo>
 
-  <!-- Gazebo FT Sensors -->
+
+  <!--
+  ======================================================================================================================================== -->
+  <!-- Gantry part -->
+
+
   <gazebo reference="map_to_xaxis">
     <sensor name="joint_a1_force_torque" type="force_torque">
       <always_on>true</always_on>
@@ -112,5 +133,10 @@
       </force_torque>
     </sensor>
   </gazebo>
+
+  <!--
+  ======================================================================================================================================== -->
+  <!-- Gantry part -->
+
 
 </robot>
