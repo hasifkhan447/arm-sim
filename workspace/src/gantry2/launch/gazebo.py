@@ -101,6 +101,7 @@ def generate_launch_description():
         output="screen",
         arguments=['-d', rviz_config_path],
         parameters=[
+            moveit_config.robot_description_kinematics,
             {'use_sim_time' : True},
         ]
     )
