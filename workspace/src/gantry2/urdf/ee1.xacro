@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <link name="eemount">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.01" radius="0.05" />
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.01" radius="0.05" />
+      </geometry>
+    </collision>
+
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="${mass_bar}" />
+      <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0" />
+    </inertial>
+  </link>
+
+
+  <joint name="zaxis_to_eemount" type="revolute">
+    <parent link="zaxis" />
+    <child link="eemount" />
+    <origin xyz="-${length_bar/2 + width_bar} 0 0" rpy="0 ${pi/2} 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.57" upper="1.57" effort="5" velocity="1" />
+  </joint>
+
+</robot>
