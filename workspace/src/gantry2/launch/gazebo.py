@@ -27,12 +27,22 @@ def generate_launch_description():
 
     params = {'robot_description' : xacro_doc.toxml()}
 
+    world_path = os.path.join(
+        get_package_share_directory('gantry2'),
+        'worlds',
+        'test.sdf'   # or .world
+    )
+
 
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py'
-        ])
+        ]),
+        launch_arguments={
+            'world': world_path
+        }.items()
     )
+
 
     moveit_config = (
         MoveItConfigsBuilder("gantry2")
@@ -91,7 +101,8 @@ def generate_launch_description():
         arguments=[
             '-topic', '/robot_description',
             '-entity', 'gantry'
-        ]
+        ],
+
     )
 
     rviz_node_launch = Node(

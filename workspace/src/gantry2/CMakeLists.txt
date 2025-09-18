@@ -12,7 +12,7 @@ find_package(rclcpp REQUIRED)
 find_package(xacro REQUIRED)
 find_package(gazebo REQUIRED)
 
-install(DIRECTORY urdf launch rviz 
+install(DIRECTORY urdf launch rviz worlds
   DESTINATION share/${PROJECT_NAME}
 )
 
