@@ -8,6 +8,9 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
+
+find_package(moveit_ros_move_group REQUIRED)
+
 find_package(rclcpp REQUIRED)
 
 add_executable(gantry2_commander src/gantry2_commander.cpp)

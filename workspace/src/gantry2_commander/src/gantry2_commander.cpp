@@ -1,10 +1,21 @@
-#include <cstdio>
+#include <memory>
 
+#include <rclcpp/rclcpp.hpp>
+#include <moveit/move_group_interface/move_group_interface.h>
 int main(int argc, char ** argv)
 {
-  (void) argc;
-  (void) argv;
+  rclcpp::init(argc, argv);
+  auto const node = std::make_shared<rclcpp::Node>(
+    "gantry2_commander",
+    rclcpp::NodeOptions().automatically_declare_parameters_from_overrides(true)
+  );
 
-  printf("hello world gantry2_commander package\n");
+  // Create a ROS logger
+  auto const logger = rclcpp::get_logger("gantry2_commander");
+
+  // Next step goes here
+
+  // Shutdown ROS
+  rclcpp::shutdown();
   return 0;
 }
