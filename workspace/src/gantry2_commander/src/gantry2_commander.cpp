@@ -2,6 +2,9 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <moveit/move_group_interface/move_group_interface.h>
+
+using moveit::planning_interface::MoveGroupInterface;
+
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
@@ -14,6 +17,32 @@ int main(int argc, char ** argv)
   auto const logger = rclcpp::get_logger("gantry2_commander");
 
   // Next step goes here
+  auto move_group_interface = MoveGroupInterface(node, "prismatic_chain");
+  auto const target_pose = []{
+    geometry_msgs::msg::Pose msg;
+    msg.orientation.w = 1.0;
+    msg.position.x = 0.28;
+    msg.position.y = -0.2;
+    msg.position.z = 0.5;
+    return msg;
+  }();
+  move_group_interface.setPoseTarget(target_pose);
+
+  auto const [success, plan] = [&move_group_interface]{
+    moveit::planning_interface::MoveGroupInterface::Plan msg;
+    auto const ok = static_cast<bool>(move_group_interface.plan(msg));
+    return std::make_pair(ok, msg);
+  }();
+
+  // Execute the plan
+  if(success) {
+    move_group_interface.execute(plan);
+  } else {
+    RCLCPP_ERROR(logger, "Planning failed!");
+  }
+
+
+
 
   // Shutdown ROS
   rclcpp::shutdown();
