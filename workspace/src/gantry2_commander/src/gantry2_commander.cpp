@@ -23,7 +23,7 @@ int main(int argc, char ** argv)
 
 
   // std::vector<double> joints = {map_to_xaxis, xaxis_to_yaxis, yaxis_to_zaxis, zaxis_to_eemount}; // order must match group joint_names
-  std::vector<double> prismatic_chain_joints = {-0.517, 0.135, -0.37, 3}; // the angle is in radians
+  std::vector<double> prismatic_chain_joints = {-0.3, 0.05, -0.4, 3}; // the angle is in radians
   prismatic_chain_move_group_interface.setJointValueTarget(prismatic_chain_joints);
 
   auto const [prismatic_success, prismatic_plan] = [&prismatic_chain_move_group_interface]{
@@ -42,7 +42,7 @@ int main(int argc, char ** argv)
 
   auto ee_move_group_interface = MoveGroupInterface(node, "ee");
 
-  std::vector<double> ee_joints = {0.03, 0.03}; // order must match group joint_names
+  std::vector<double> ee_joints = {0.01, 0.01}; // order must match group joint_names
   ee_move_group_interface.setJointValueTarget(ee_joints);
 
   auto const [ee_success, ee_plan] = [&ee_move_group_interface]{
