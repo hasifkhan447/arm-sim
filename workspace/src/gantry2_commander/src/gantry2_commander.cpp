@@ -17,25 +17,43 @@ int main(int argc, char ** argv)
   auto const logger = rclcpp::get_logger("gantry2_commander");
 
   // Next step goes here
-  auto move_group_interface = MoveGroupInterface(node, "prismatic_chain");
+  auto prismatic_chain_move_group_interface = MoveGroupInterface(node, "prismatic_chain");
 
   // std::vector<double> joints = {map_to_xaxis, xaxis_to_yaxis, yaxis_to_zaxis, zaxis_to_eemount}; // order must match group joint_names
-  std::vector<double> joints = {-0.517, 0.135, 0.081, 3}; // order must match group joint_names
-  move_group_interface.setJointValueTarget(joints);
+  std::vector<double> prismatic_chain_joints = {-0.517, 0.135, 0.081, 3}; // order must match group joint_names
+  prismatic_chain_move_group_interface.setJointValueTarget(prismatic_chain_joints);
 
-  // move_group_interface.setPoseTarget(target_pose);
-
-  auto const [success, plan] = [&move_group_interface]{
+  auto const [prismatic_success, prismatic_plan] = [&prismatic_chain_move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
-    auto const ok = static_cast<bool>(move_group_interface.plan(msg));
+    auto const ok = static_cast<bool>(prismatic_chain_move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
+
   // Execute the plan
-  if(success) {
-    move_group_interface.execute(plan);
+  if(prismatic_success) {
+    prismatic_chain_move_group_interface.execute(prismatic_plan);
   } else {
-    RCLCPP_ERROR(logger, "Planning failed!");
+    RCLCPP_ERROR(logger, "Planning failed for prismatic!");
+  }
+
+  auto ee_move_group_interface = MoveGroupInterface(node, "ee");
+
+  std::vector<double> ee_joints = {0.02, 0.02}; // order must match group joint_names
+  ee_move_group_interface.setJointValueTarget(ee_joints);
+
+  auto const [ee_success, ee_plan] = [&ee_move_group_interface]{
+    moveit::planning_interface::MoveGroupInterface::Plan msg;
+    auto const ok = static_cast<bool>(ee_move_group_interface.plan(msg));
+    return std::make_pair(ok, msg);
+  }();
+
+
+  // Execute the plan
+  if(ee_success) {
+    prismatic_chain_move_group_interface.execute(ee_plan);
+  } else {
+    RCLCPP_ERROR(logger, "Planning failed for EE!");
   }
 
 
