@@ -18,15 +18,12 @@ int main(int argc, char ** argv)
 
   // Next step goes here
   auto move_group_interface = MoveGroupInterface(node, "prismatic_chain");
-  auto const target_pose = []{
-    geometry_msgs::msg::Pose msg;
-    msg.orientation.w = 1.0;
-    msg.position.x = 0.28;
-    msg.position.y = -0.2;
-    msg.position.z = 0.5;
-    return msg;
-  }();
-  move_group_interface.setPoseTarget(target_pose);
+
+  // std::vector<double> joints = {map_to_xaxis, xaxis_to_yaxis, yaxis_to_zaxis, zaxis_to_eemount}; // order must match group joint_names
+  std::vector<double> joints = {-0.517, 0.135, 0.081, 3}; // order must match group joint_names
+  move_group_interface.setJointValueTarget(joints);
+
+  // move_group_interface.setPoseTarget(target_pose);
 
   auto const [success, plan] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
