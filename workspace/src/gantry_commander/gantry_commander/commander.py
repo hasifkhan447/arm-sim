@@ -1,33 +1,54 @@
+#!/usr/bin/env python3
+
 import rclpy
 from rclpy.node import Node
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from moveitpy import MoveGroupCommander, RobotCommander, PlanningSceneInterface, roscpp_initialize, roscpp_shutdown
 
 class GantryCommander(Node):
     def __init__(self):
         super().__init__('gantry_commander')
-        self.pub = self.create_publisher(JointTrajectory,
-                                         '/prismatic_chain_controller/joint_trajectory',
-                                         10)
-    
-    def move_to(self, x, y, z, rot):
-        traj = JointTrajectory()
-        traj.joint_names = ['map_to_xaxis', 'xaxis_to_yaxis', 'yaxis_to_zaxis', 'zaxis_to_eemount']
 
-        point = JointTrajectoryPoint()
-        point.positions = [x, y, z, rot]
-        point.time_from_start.sec = 3
-        
-        traj.points.append(point)
-        self.pub.publish(traj)
-        self.get_logger().info(f"Sent trajectory to ({x}, {y}, {z}, {rot})")
+        # Initialize moveit_commander (needs to happen once)
+        roscpp_initialize([])
 
-def main():
-    rclpy.init()
+        # Setup robot and planning group
+        self.robot = RobotCommander()
+        self.scene = PlanningSceneInterface()
+        self.group = MoveGroupCommander("prismatic_chain")  # <- must match your MoveIt group name
+
+        self.group.set_max_velocity_scaling_factor(0.2)
+        self.group.set_max_acceleration_scaling_factor(0.2)
+
+        # Example sequence
+        self.move_to([0.2, 0.0, 0.0])
+        self.move_to([0.2, 0.2, 0.0])
+        self.move_to([0.0, 0.0, 0.0])
+
+        # shutdown
+        roscpp_shutdown()
+        rclpy.shutdown()
+
+    def move_to(self, target):
+        self.get_logger().info(f"Moving gantry to {target}")
+        self.group.set_position_target(target)
+
+        plan = self.group.plan()
+
+        success = self.group.go(wait=True)
+        self.group.stop()
+        self.group.clear_pose_targets()
+
+        if success:
+            self.get_logger().info("✅ Motion executed successfully")
+        else:
+            self.get_logger().warn("⚠️ Motion failed")
+
+
+def main(args=None):
+    rclpy.init(args=args)
     node = GantryCommander()
-    node.move_to(0.2, 0.1, 0.3, 0.3)  # example target
     rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()
