@@ -19,6 +19,9 @@ int main(int argc, char ** argv)
   // Next step goes here
   auto prismatic_chain_move_group_interface = MoveGroupInterface(node, "prismatic_chain");
 
+
+
+
   // std::vector<double> joints = {map_to_xaxis, xaxis_to_yaxis, yaxis_to_zaxis, zaxis_to_eemount}; // order must match group joint_names
   std::vector<double> prismatic_chain_joints = {-0.517, 0.135, 0.081, 3}; // order must match group joint_names
   prismatic_chain_move_group_interface.setJointValueTarget(prismatic_chain_joints);
