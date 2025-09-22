@@ -42,7 +42,7 @@ int main(int argc, char ** argv)
 
   auto ee_move_group_interface = MoveGroupInterface(node, "ee");
 
-  std::vector<double> ee_joints = {0.01, 0.01}; // order must match group joint_names
+  std::vector<double> ee_joints = {0.005, 0.005}; // order must match group joint_names
   ee_move_group_interface.setJointValueTarget(ee_joints);
 
   auto const [ee_success, ee_plan] = [&ee_move_group_interface]{

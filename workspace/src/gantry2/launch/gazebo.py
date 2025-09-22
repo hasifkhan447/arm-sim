@@ -102,7 +102,6 @@ def generate_launch_description():
             '-topic', '/robot_description',
             '-entity', 'gantry'
         ],
-
     )
 
     rviz_node_launch = Node(

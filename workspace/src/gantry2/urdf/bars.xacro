@@ -3,7 +3,7 @@
   <xacro:property name="length_bar" value="1" />    <!-- travel along X (m) -->
   <xacro:property name="thickness_bar" value="0.02" />    <!-- travel along X (m) -->
   <xacro:property name="width_bar" value="0.02" />    <!-- travel along X (m) -->
-  <xacro:property name="mass_bar" value="1" />    <!-- travel along X (m) -->
+  <xacro:property name="mass_bar" value="30" />    <!-- weight (kg) -->
 
   <!-- Macro for a bar -->
   <xacro:macro name="bar" params="name length width thickness">
