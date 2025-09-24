@@ -85,7 +85,15 @@ RUN apt-get update && apt-get install -y \
     ros-humble-joint-state-publisher-gui \
     && rm -rf /var/lib/apt/lists/*
 
-# Create a non-root user
+RUN apt-get update && apt-get install -y \
+    liburdfdom-dev \
+    ros-humble-moveit-resources \
+    python3-pybind11 \
+    pybind11-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+
+RUN # Create a non-root user
 ARG USERNAME=rosdev
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
@@ -106,6 +114,15 @@ RUN mkdir -p src && chown -R $USERNAME:$USERNAME /home/$USERNAME
 USER $USERNAME
 WORKDIR /home/$USERNAME/workspace
 
+RUN rosdep update
+
+COPY ./workspace/src/moveit_task_constructor /home/$USERNAME/workspace/src/moveit_task_constructor
+RUN    rosdep install --from-paths /home/$USERNAME/workspace/src/moveit_task_constructor \
+    --ignore-src --rosdistro=$ROS_DISTRO -y \
+    --simulate \
+    --skip-keys="liburdfdom-headers moveit_resources_panda_moveit_config py_binding_tools"
+
+
 # Source ROS 2 and Gazebo in .bashrc
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /home/$USERNAME/.bashrc \
     && echo "source /usr/share/gazebo-11/setup.sh" >> /home/$USERNAME/.bashrc 
@@ -116,4 +133,6 @@ RUN sudo chmod +x /entrypoint.sh
 # Entrypoint and default command
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]
+
+
 

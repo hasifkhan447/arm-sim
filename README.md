@@ -36,9 +36,7 @@ ros2 launch six_dof_arm launch_moveit.py
 
 
 # What do I need to do?
-TODO: I need to make the motor torques readable
-  - figure out how to set a contact in gazebo 
-  - figure out how to read torques
 TODO: Figure out how to do task level description
+
 
 
