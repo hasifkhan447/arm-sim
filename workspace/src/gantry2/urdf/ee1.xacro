@@ -50,7 +50,6 @@
     </inertial>
   </link>
 
-
   <!-- Right finger -->
   <link name="right_finger">
     <visual>
@@ -71,24 +70,23 @@
     </inertial>
   </link>
 
-
+  <!-- Left prismatic joint -->
   <joint name="gripper_left_joint" type="prismatic">
     <parent link="eemount" />
     <child link="left_finger" />
     <origin xyz="0 0.05 -0.12" rpy="${pi/2} 0 0" />
-    <axis xyz="0 0 1" /> <!-- slides along +Y -->
-    <limit lower="0.0" upper="0.04" effort="10" velocity="0.1" />
+    <axis xyz="0 0 -1" /> <!-- slides along +Y -->
+    <limit lower="0.0" upper="0.08" effort="10" velocity="0.1" />
   </joint>
 
-
+  <!-- Right prismatic joint (mimics left) -->
   <joint name="gripper_right_joint" type="prismatic">
     <parent link="eemount" />
     <child link="right_finger" />
     <origin xyz="0 -0.05 -0.02" rpy="${pi/2} 0 0" />
-    <axis xyz="0 0 -1" /> <!-- slides along -Y -->
-    <limit lower="0.0" upper="0.04" effort="10" velocity="0.1" />
-    <!-- <mimic joint="gripper_left_joint" multiplier="-1" offset="0" /> -->
+    <axis xyz="0 0 1" /> <!-- slides along -Y -->
+    <limit lower="0.0" upper="0.08" effort="10" velocity="0.1" />
+    <mimic joint="gripper_left_joint" multiplier="1" offset="0" />
   </joint>
-
 
 </robot>

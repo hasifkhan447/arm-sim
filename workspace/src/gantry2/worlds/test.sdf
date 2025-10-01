@@ -1,20 +1,13 @@
-
 <?xml version="1.0"?>
-
 <sdf version="1.6">
-
 <world name="basic_world">
 
 <include>
-
   <uri>model://ground_plane</uri>
-
 </include>
 
 <include>
-
   <uri>model://sun</uri>
-
 </include>
 <model name="conveyor">
     <static>true</static>
@@ -319,43 +312,25 @@
   
 
   <link name="flap_3">
-
-    <pose>-0.15 0 0.095 0 0 0</pose> <collision name="collision">
-
+    <pose>-0.15 0 0.095 0 0 0</pose>
+    <collision name="collision">
       <geometry>
-
         <box>
-
           <size>0.1 0.19 0.005</size>
-
         </box>
-
       </geometry>
-
     </collision>
-
     <visual name="visual">
-
       <geometry>
-
         <box>
-
           <size>0.1 0.19 0.005</size>
-
         </box>
-
       </geometry>
-
       <material>
-
         <ambient>0.7 0.5 0.3 1</ambient>
-
         <diffuse>0.7 0.5 0.3 1</diffuse>
-
       </material>
-
     </visual>
-
     <inertial>
       <mass>0.04</mass>
       <inertia>
@@ -366,128 +341,75 @@
     </inertial>
   </link>
 
-  
-
   <joint name="flap_3_joint" type="revolute">
-
     <parent>left_wall</parent>
-
     <child>flap_3</child>
-
-    <pose>0.05 0 0 0 0 0</pose> <axis>
-
-      <xyz>0 1 0</xyz> <limit>
-
-        <lower>-1.4</lower>
-
+    <pose>0.05 0 0 0 0 0</pose>
+    <axis>
+      <xyz>0 1 0</xyz>
+      <limit>
+        <lower>0.5</lower>
         <upper>3.1416</upper>
-
       </limit>
-
       <dynamics>
-
         <damping>0.0005</damping>
-
         <friction>0.0005</friction>
-
       </dynamics>
-
     </axis>
-
+    <initial_position>0.6</initial_position>
   </joint>
-
-  
 
   <link name="flap_4">
-
-    <pose>0.15 0 0.095 0 0 0</pose> <collision name="collision">
-
+    <pose>0.15 0 0.095 0 0 0</pose>
+    <collision name="collision">
       <geometry>
-
         <box>
-
           <size>0.1 0.19 0.005</size>
-
         </box>
-
       </geometry>
-
     </collision>
-
     <visual name="visual">
-
       <geometry>
-
         <box>
-
           <size>0.1 0.19 0.005</size>
-
         </box>
-
       </geometry>
-
       <material>
-
         <ambient>0.7 0.5 0.3 1</ambient>
-
         <diffuse>0.7 0.5 0.3 1</diffuse>
-
       </material>
-
     </visual>
-
     <inertial>
-
       <mass>0.01</mass>
-
       <inertia>
-
         <ixx>0.00001</ixx>
-
         <iyy>0.00001</iyy>
-
         <izz>0.00001</izz>
-
       </inertia>
-
     </inertial>
-
   </link>
 
-  
-
   <joint name="flap_4_joint" type="revolute">
-
     <parent>right_wall</parent>
-
     <child>flap_4</child>
-
-    <pose>-0.05 0 0 0 0 0</pose> <axis>
-
-      <xyz>0 1 0</xyz> <limit>
-
+    <pose>-0.05 0 0 0 0 0</pose>
+    <axis>
+      <xyz>0 1 0</xyz>
+      <limit>
         <lower>-3.1416</lower>
-
-        <upper>1.4</upper>
-
+        <upper>-0.5</upper>
       </limit>
-
       <dynamics>
-
         <damping>0.0005</damping>
-
         <friction>0.0005</friction>
-
       </dynamics>
-
     </axis>
-
+    <initial_position>-0.6</initial_position>
   </joint>
-
 </model>
 
 <model name="microwave">
-  <pose>-0.3 -0.4 0.5 0 0 0</pose>
+  <pose>-0.3 -0.4 0.2 0 0 0</pose>
   <link name="microwave_link">
     <collision name="collision">
       <geometry>
@@ -531,7 +453,6 @@
 
   </link>
 </model>
-
+	<plugin name="gazebo_link_attacher" filename="libgazebo_link_attacher.so"><model_name>gantry</model_name><attach_service_name>ATTACHLINK</attach_service_name><detach_service_name>DETACHLINK</detach_service_name></plugin>
 </world>
-
-</sdf> 
+</sdf>
