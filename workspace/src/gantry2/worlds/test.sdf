@@ -14,7 +14,7 @@
 
     <!-- Cube -->
     <model name="cube">
-      <pose>-0.3 -0.4 0 0 0 0</pose> <!-- x y z roll pitch yaw -->
+      <pose>-0.1 -0.4 0 0 0 0</pose> <!-- x y z roll pitch yaw -->
       <link name="link">
         <collision name="collision">
           <geometry>
@@ -58,6 +58,8 @@
         </visual>
       </link>
       <plugin name="conveyor_plugin" filename="libconveyer_plugin.so">
+        <belt_velocity>0.3</belt_velocity> <!-- m/s -->
+        <belt_direction>-1 0 0</belt_direction> <!-- X axis -->
       </plugin>
     </model>
 

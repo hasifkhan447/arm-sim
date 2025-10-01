@@ -20,58 +20,47 @@ namespace gazebo
       model = _parent;
       world = model->GetWorld();
 
+      // Parse params
       velocity = _sdf->HasElement("belt_velocity") ?
                  _sdf->Get<double>("belt_velocity") : 0.2;
 
       if (_sdf->HasElement("belt_direction"))
         direction = _sdf->Get<ignition::math::Vector3d>("belt_direction").Normalize();
       else
-        direction = ignition::math::Vector3d(1, 0, 0);
+        direction = ignition::math::Vector3d(1, 0, 0); // default x-axis
 
       gzdbg << "[ConveyorPlugin] Loaded with velocity=" << velocity
             << " direction=" << direction << std::endl;
 
+      // Connect update
       updateConnection = event::Events::ConnectWorldUpdateBegin(
           std::bind(&ConveyorPlugin::OnUpdate, this));
     }
 
     void OnUpdate()
     {
-      // Conveyor belt link AABB
-      auto beltLink = model->GetLink("belt");
-      if (!beltLink) return;
-
-      ignition::math::AxisAlignedBox beltBox = beltLink->BoundingBox();
-
       for (auto &m : world->Models())
       {
-        if (m == model) continue; // skip conveyor itself
+        if (m == model) continue; // skip the conveyor itself
 
         std::string modelName = m->GetName();
-        if (modelName.find("cube") != 0) continue; // only cubes
+
+        // ✅ Only apply to cubes
+        if (modelName.find("cube") != 0) // starts with "cube"
+          continue;
 
         auto link = m->GetLink();
         if (!link) continue;
 
-        // Cube position
-        ignition::math::Vector3d pos = link->WorldPose().Pos();
-        ignition::math::Vector3d vel;
+        // Proximity check: is the cube near conveyor surface?
+        auto pos = link->WorldPose().Pos();
+        auto beltPos = model->WorldPose().Pos();
 
-        // Check if cube X/Y is inside conveyor top area
-        if (pos.X() >= beltBox.Min().X() && pos.X() <= beltBox.Max().X() &&
-            pos.Y() >= beltBox.Min().Y() && pos.Y() <= beltBox.Max().Y())
+        if (fabs(pos.Z() - beltPos.Z()) < 0.2 && fabs(pos.X() - beltPos.X() < 0.5)) // near surface
         {
-          // Check if cube is above the conveyor top surface (with tolerance)
-          double beltTopZ = beltBox.Max().Z();
-          if (pos.Z() >= beltTopZ && pos.Z() <= beltTopZ + 0.2)
-          { 
-            vel = direction * velocity;
-          }
+          ignition::math::Vector3d vel = direction * velocity;
+          link->SetLinearVel(vel);
         }
-        else {
-          vel = direction * 0;
-        }
-        link->SetLinearVel(vel);
       }
     }
   };
