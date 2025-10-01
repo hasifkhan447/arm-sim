@@ -43,7 +43,7 @@
       <link name="belt">
         <collision name="collision">
           <geometry>
-            <box><size>2 0.5 3</size></box>
+            <box><size>1 0.5 0.1</size></box>
           </geometry>
           <surface>
             <contact>
@@ -53,11 +53,16 @@
         </collision>
         <visual name="visual">
           <geometry>
-            <box><size>2 0.5 0.1</size></box>
+            <box><size>1 0.5 0.1</size></box>
           </geometry>
         </visual>
       </link>
+      <plugin name="conveyor_plugin" filename="libconveyer_plugin.so">
+      </plugin>
     </model>
+
+
+
 
 
 
