@@ -16,13 +16,32 @@
     <model name="cube">
       <pose>-0.1 -0.4 0 0 0 0</pose> <!-- x y z roll pitch yaw -->
       <link name="link">
+        <inertial>
+          <mass>20.0</mass>
+        </inertial>
+
+
+
         <collision name="collision">
           <geometry>
             <box>
               <size>0.07 0.07 0.07</size>
             </box>
           </geometry>
+
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.8</mu>        <!-- primary friction coefficient -->
+                <mu2>0.8</mu2>      <!-- secondary friction coefficient -->
+              </ode>
+            </friction>
+          </surface>
+
+
         </collision>
+
+
         <visual name="visual">
           <geometry>
             <box>
@@ -35,6 +54,9 @@
           </material>
         </visual>
       </link>
+
+
+
     </model>
 
     <model name="conveyor">
@@ -43,7 +65,7 @@
       <link name="belt">
         <collision name="collision">
           <geometry>
-            <box><size>1 0.5 0.1</size></box>
+            <box><size>3 0.5 0.1</size></box>
           </geometry>
           <surface>
             <contact>
@@ -53,12 +75,12 @@
         </collision>
         <visual name="visual">
           <geometry>
-            <box><size>1 0.5 0.1</size></box>
+            <box><size>3 0.5 0.1</size></box>
           </geometry>
         </visual>
       </link>
       <plugin name="conveyor_plugin" filename="libconveyer_plugin.so">
-        <belt_velocity>0.3</belt_velocity> <!-- m/s -->
+        <belt_velocity>0.2</belt_velocity> <!-- m/s -->
         <belt_direction>-1 0 0</belt_direction> <!-- X axis -->
       </plugin>
     </model>
