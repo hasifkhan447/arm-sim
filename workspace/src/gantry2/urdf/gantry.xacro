@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rectangular_gantry">
 
   <xacro:include filename="$(find gantry2)/urdf/bars.xacro" />
-  <xacro:include filename="$(find gantry2)/urdf/ee3.xacro" />
+  <xacro:include filename="$(find gantry2)/urdf/ee4.xacro" />
   <xacro:include filename="$(find gantry2)/urdf/ros2_control.xacro" />
 
 
