@@ -1,97 +1,458 @@
 <?xml version="1.0"?>
 <sdf version="1.6">
-  <world name="basic_world">
+<world name="basic_world">
 
-    <!-- Ground plane -->
-    <include>
-      <uri>model://ground_plane</uri>
-    </include>
+<include>
+  <uri>model://ground_plane</uri>
+</include>
 
-    <!-- Sun -->
-    <include>
-      <uri>model://sun</uri>
-    </include>
+<include>
+  <uri>model://sun</uri>
+</include>
+<model name="conveyor">
+    <static>true</static>
+    <pose>-0.5 -0.5 0.05 0 0 0</pose>
+    <link name="belt">
+      <collision name="collision">
+        <geometry>
+          <box><size>3 0.5 0.1</size></box>
+        </geometry>
+        <surface>
+          <contact>
+            <collide_bitmask>0x01</collide_bitmask>
+          </contact>
+        </surface>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box><size>3 0.5 0.1</size></box>
+        </geometry>
+      </visual>
+    </link>
+    <plugin name="conveyor_belt_plugin" filename="libconveyer_plugin.so">
+      <belt_velocity>0.2</belt_velocity>
+      <belt_direction>-1 0 0</belt_direction>
+    </plugin>
+  </model>
 
-    <!-- Cube -->
-    <model name="cube">
-      <pose>-0.1 -0.4 0 0 0 0</pose> <!-- x y z roll pitch yaw -->
-      <link name="link">
-        <inertial>
-          <mass>20.0</mass>
-        </inertial>
-
-
-
-        <collision name="collision">
-          <geometry>
-            <box>
-              <size>0.07 0.07 0.07</size>
-            </box>
-          </geometry>
-
-          <surface>
-            <friction>
-              <ode>
-                <mu>0.8</mu>        <!-- primary friction coefficient -->
-                <mu2>0.8</mu2>      <!-- secondary friction coefficient -->
-              </ode>
-            </friction>
-          </surface>
-
-
-        </collision>
-
-
-        <visual name="visual">
-          <geometry>
-            <box>
-              <size>0.07 0.07 0.07</size>
-            </box>
-          </geometry>
-          <material>
-            <ambient>0 0 1 1</ambient> <!-- blue -->
-            <diffuse>0 0 1 1</diffuse>
-          </material>
-        </visual>
-      </link>
-
-
-
-    </model>
-
-    <model name="conveyor">
-      <static>true</static>
-      <pose>-0.5 -0.5 0 0 0 0</pose> <!-- x y z roll pitch yaw -->
-      <link name="belt">
-        <collision name="collision">
-          <geometry>
-            <box><size>3 0.5 0.1</size></box>
-          </geometry>
-          <surface>
-            <contact>
-              <collide_bitmask>0x01</collide_bitmask>
-            </contact>
-          </surface>
-        </collision>
-        <visual name="visual">
-          <geometry>
-            <box><size>3 0.5 0.1</size></box>
-          </geometry>
-        </visual>
-      </link>
-      <plugin name="conveyor_plugin" filename="libconveyer_plugin.so">
-        <belt_velocity>0.2</belt_velocity> <!-- m/s -->
-        <belt_direction>-1 0 0</belt_direction> <!-- X axis -->
-      </plugin>
-    </model>
+<model name="cardboard_box">
+  <pose>1.8 -0.5 0.15 0 0 0</pose>
+    <link name="bottom">
+    <pose>0 0 -0.095 0 0 0</pose>
+  <collision name="collision">
+    <geometry>
+      <box><size>0.2 0.2 0.01</size></box>
+    </geometry>
+    <surface>
+      <friction>
+        <ode>
+          <mu>1.0</mu>
+          <mu2>1.0</mu2>
+        </ode>
+      </friction>
+      <bounce>
+        <restitution_coefficient>0.1</restitution_coefficient>
+        <threshold>0.01</threshold>
+      </bounce>
+      <contact>
+        <ode>
+          <kp>100000</kp>  <!-- Stiffness -->
+          <kd>1</kd>        <!-- Damping -->
+        </ode>
+      </contact>
+    </surface>
+  </collision>
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>0.2 0.2 0.01</size>
+        </box>
+      </geometry>
+      <material>
+        <ambient>0.7 0.5 0.3 1</ambient>
+        <diffuse>0.7 0.5 0.3 1</diffuse>
+      </material>
+    </visual>
+    <inertial>
+      <mass>0.15</mass>
+      <inertia>
+        <ixx>0.00050</ixx>
+        <iyy>0.00050</iyy>
+        <izz>0.00100</izz>
+      </inertia>
+    </inertial>
 
 
+  </link>
+  
+    <link name="front_wall">
+    <pose>0 0.095 0 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box>
+          <size>0.2 0.01 0.19</size>
+        </box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>0.2 0.01 0.19</size>
+        </box>
+      </geometry>
+      <material>
+        <ambient>0.7 0.5 0.3 1</ambient>
+        <diffuse>0.7 0.5 0.3 1</diffuse>
+      </material>
+    </visual>
+    <inertial>
+      <mass>0.08</mass>
+      <inertia>
+        <ixx>0.00024</ixx>
+        <iyy>0.00027</iyy>
+        <izz>0.00003</izz>
+      </inertia>
+    </inertial>
+  </link>
+  
+    <link name="back_wall">
+    <pose>0 -0.095 0 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box>
+          <size>0.2 0.01 0.19</size>
+        </box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>0.2 0.01 0.19</size>
+        </box>
+      </geometry>
+      <material>
+        <ambient>0.7 0.5 0.3 1</ambient>
+        <diffuse>0.7 0.5 0.3 1</diffuse>
+      </material>
+    </visual>
+    <inertial>
+      <mass>0.08</mass>
+      <inertia>
+        <ixx>0.00024</ixx>
+        <iyy>0.00027</iyy>
+        <izz>0.00003</izz>
+      </inertia>
+    </inertial>
+  </link>
+  
+    <link name="left_wall">
+    <pose>-0.095 0 0 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box>
+          <size>0.01 0.19 0.19</size>
+        </box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>0.01 0.19 0.19</size>
+        </box>
+      </geometry>
+      <material>
+        <ambient>0.7 0.5 0.3 1</ambient>
+        <diffuse>0.7 0.5 0.3 1</diffuse>
+      </material>
+    </visual>
+    <inertial>
+      <mass>0.08</mass>
+      <inertia>
+        <ixx>0.00024</ixx>
+        <iyy>0.00003</iyy>
+        <izz>0.00024</izz>
+      </inertia>
+    </inertial>
+  </link>
+  
+    <link name="right_wall">
+    <pose>0.095 0 0 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box>
+          <size>0.01 0.19 0.19</size>
+        </box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>0.01 0.19 0.19</size>
+        </box>
+      </geometry>
+      <material>
+        <ambient>0.7 0.5 0.3 1</ambient>
+        <diffuse>0.7 0.5 0.3 1</diffuse>
+      </material>
+    </visual>
+    <inertial>
+      <mass>0.08</mass>
+      <inertia>
+        <ixx>0.00024</ixx>
+        <iyy>0.00003</iyy>
+        <izz>0.00024</izz>
+      </inertia>
+    </inertial>
+  </link>
+  
+    <joint name="front_wall_joint" type="fixed">
+    <parent>bottom</parent>
+    <child>front_wall</child>
+  </joint>
+  
+    <link name="flap_2">
+    <pose>0.0 -0.15 0.095 0 0 0</pose>     <collision name="collision">
+      <geometry>
+        <box>
+          <size>0.2 0.1 0.005</size>
+        </box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>0.2 0.1 0.005</size>
+        </box>
+      </geometry>
+      <material>
+        <ambient>0.7 0.5 0.3 1</ambient>
+        <diffuse>0.7 0.5 0.3 1</diffuse>
+      </material>
+    </visual>
+    <inertial>
+      <mass>0.04</mass>
+      <inertia>
+        <ixx>0.000003</ixx>
+        <iyy>0.000007</iyy>
+        <izz>0.000007</izz>
+      </inertia>
+    </inertial>
+  </link>
+  
+  <joint name="flap_2_joint" type="revolute">
+    <parent>back_wall</parent>
+    <child>flap_2</child>
+    <pose>0.0 0.05 0 0 0 0</pose>     <axis>
+      <xyz>1 0 0</xyz>       <limit>
+        <lower>-3.1416</lower>
+        <upper>1.5</upper>
+      </limit>
+      <dynamics>
+        <damping>0.0025</damping>         <friction>0.0025</friction>
+      </dynamics>
+    </axis>
+  </joint>
+  
+  <joint name="back_wall_joint" type="fixed">
+    <parent>bottom</parent>
+    <child>back_wall</child>
+  </joint>
+  
+  <joint name="left_wall_joint" type="fixed">
+    <parent>bottom</parent>
+    <child>left_wall</child>
+  </joint>
+  
+  <joint name="right_wall_joint" type="fixed">
+    <parent>bottom</parent>
+    <child>right_wall</child>
+  </joint>
+  
+    <link name="flap_1">
+    <pose>0.0 0.15 0.095 0 0 0</pose>     <collision name="collision">
+      <geometry>
+        <box>
+          <size>0.2 0.1 0.005</size>
+        </box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>0.2 0.1 0.005</size>
+        </box>
+      </geometry>
+      <material>
+        <ambient>0.7 0.5 0.3 1</ambient>
+        <diffuse>0.7 0.5 0.3 1</diffuse>
+      </material>
+    </visual>
+    <inertial>
+      <mass>0.04</mass>
+      <inertia>
+        <ixx>0.000003</ixx>
+        <iyy>0.000007</iyy>
+        <izz>0.000007</izz>
+      </inertia>
+    </inertial>
+  </link>
+  
+  <joint name="flap_1_joint" type="revolute">
+    <parent>front_wall</parent>
+    <child>flap_1</child>
+    <pose>0.0 -0.05 0 0.5 0 0</pose>     <axis>
+      <xyz>1 0 0</xyz>       <limit>
+        <lower>-1.5</lower>         <upper>3.1416</upper>            </limit>
+      <dynamics>
+        <damping>0.002</damping>
+        <friction>0.002</friction>
+      </dynamics>
+    </axis>
+  </joint>
+  
 
+  <link name="flap_3">
+    <pose>-0.15 0 0.095 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box>
+          <size>0.1 0.19 0.005</size>
+        </box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>0.1 0.19 0.005</size>
+        </box>
+      </geometry>
+      <material>
+        <ambient>0.7 0.5 0.3 1</ambient>
+        <diffuse>0.7 0.5 0.3 1</diffuse>
+      </material>
+    </visual>
+    <inertial>
+      <mass>0.04</mass>
+      <inertia>
+        <ixx>0.000005</ixx>
+        <iyy>0.000003</iyy>
+        <izz>0.000006</izz>
+      </inertia>
+    </inertial>
+  </link>
 
+  <joint name="flap_3_joint" type="revolute">
+    <parent>left_wall</parent>
+    <child>flap_3</child>
+    <pose>0.05 0 0 0 0 0</pose>
+    <axis>
+      <xyz>0 1 0</xyz>
+      <limit>
+        <lower>0.5</lower>
+        <upper>3.1416</upper>
+      </limit>
+      <dynamics>
+        <damping>0.0005</damping>
+        <friction>0.0005</friction>
+      </dynamics>
+    </axis>
+    <initial_position>0.6</initial_position>
+  </joint>
 
+  <link name="flap_4">
+    <pose>0.15 0 0.095 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box>
+          <size>0.1 0.19 0.005</size>
+        </box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>0.1 0.19 0.005</size>
+        </box>
+      </geometry>
+      <material>
+        <ambient>0.7 0.5 0.3 1</ambient>
+        <diffuse>0.7 0.5 0.3 1</diffuse>
+      </material>
+    </visual>
+    <inertial>
+      <mass>0.01</mass>
+      <inertia>
+        <ixx>0.00001</ixx>
+        <iyy>0.00001</iyy>
+        <izz>0.00001</izz>
+      </inertia>
+    </inertial>
+  </link>
 
+  <joint name="flap_4_joint" type="revolute">
+    <parent>right_wall</parent>
+    <child>flap_4</child>
+    <pose>-0.05 0 0 0 0 0</pose>
+    <axis>
+      <xyz>0 1 0</xyz>
+      <limit>
+        <lower>-3.1416</lower>
+        <upper>-0.5</upper>
+      </limit>
+      <dynamics>
+        <damping>0.0005</damping>
+        <friction>0.0005</friction>
+      </dynamics>
+    </axis>
+    <initial_position>-0.6</initial_position>
+  </joint>
+</model>
 
+<model name="microwave">
+  <pose>-0.3 -0.4 0.2 0 0 0</pose>
+  <link name="microwave_link">
+    <collision name="collision">
+      <geometry>
+        <box>
+          <size>0.1 0.1 0.1</size>
+        </box>
+      </geometry>
+      <surface>
+        <friction>
+          <ode>
+            <mu>0.8</mu>
+            <mu2>0.8</mu2>
+          </ode>
+        </friction>
+        <bounce>
+          <restitution_coefficient>0.4</restitution_coefficient>
+          <threshold>0.0</threshold>
+        </bounce>
+      </surface>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>0.1 0.1 0.1</size>
+        </box>
+      </geometry>
+      <material>
+        <ambient>1 1 1 1</ambient>
+        <diffuse>1 1 1 1</diffuse>
+        <specular>1 1 1 1</specular>
+      </material>
+    </visual>
+    <inertial>
+      <mass>0.5</mass>
+      <inertia>
+        <ixx>0.00083</ixx>
+        <iyy>0.00083</iyy>
+        <izz>0.00083</izz>
+      </inertia>
+    </inertial>
 
-
-  </world>
+  </link>
+</model>
+	<plugin name="gazebo_link_attacher" filename="libgazebo_link_attacher.so"><model_name>gantry</model_name><attach_service_name>ATTACHLINK</attach_service_name><detach_service_name>DETACHLINK</detach_service_name></plugin>
+</world>
 </sdf>
