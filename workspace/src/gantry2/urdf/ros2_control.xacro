@@ -12,7 +12,6 @@
     <!-- Gantry part -->
     <joint name="map_to_xaxis">
       <command_interface name="position" />
-      <command_interface name="velocity" />
       <state_interface name="position">
         <param name="initial_value">0.0</param>
       </state_interface>
@@ -21,7 +20,6 @@
 
     <joint name="xaxis_to_yaxis">
       <command_interface name="position" />
-      <command_interface name="velocity" />
       <state_interface name="position">
         <param name="initial_value">0.0</param>
       </state_interface>
@@ -30,7 +28,6 @@
 
     <joint name="yaxis_to_zaxis">
       <command_interface name="position" />
-      <command_interface name="velocity" />
       <state_interface name="position">
         <param name="initial_value">0.0</param>
       </state_interface>
@@ -75,7 +72,6 @@
 
     <joint name="zaxis_to_eemount">
       <command_interface name="position" />
-      <command_interface name="velocity" />
       <state_interface name="position">
         <param name="initial_value">0.0</param>
       </state_interface>
@@ -85,7 +81,6 @@
 
     <joint name="gripper_left_joint">
       <command_interface name="position" />
-      <command_interface name="velocity" />
       <state_interface name="position">
         <param name="initial_value">0.0</param>
       </state_interface>
@@ -94,7 +89,6 @@
 
     <joint name="gripper_right_joint">
       <command_interface name="position" />
-      <command_interface name="velocity" />
       <state_interface name="position">
         <param name="initial_value">0.0</param>
       </state_interface>

@@ -10,31 +10,31 @@ default_acceleration_scaling_factor: 0.1
 joint_limits:
   gripper_left_joint:
     has_velocity_limits: true
-    max_velocity: 0.10000000000000001
+    max_velocity: 10.0 
     has_acceleration_limits: false
     max_acceleration: 10.0
   gripper_right_joint:
     has_velocity_limits: true
-    max_velocity: 0.10000000000000001
+    max_velocity: 10.0
     has_acceleration_limits: false
     max_acceleration: 10.0
   map_to_xaxis:
     has_velocity_limits: true
-    max_velocity: 1.0
+    max_velocity: 10.0
     has_acceleration_limits: false
     max_acceleration: 10.0
   xaxis_to_yaxis:
     has_velocity_limits: true
-    max_velocity: 1.0
+    max_velocity: 10.0
     has_acceleration_limits: false
     max_acceleration: 10.0
   yaxis_to_zaxis:
     has_velocity_limits: true
-    max_velocity: 1.0
+    max_velocity: 10.0
     has_acceleration_limits: false
     max_acceleration: 10.0
   zaxis_to_eemount:
     has_velocity_limits: true
-    max_velocity: 1.0
+    max_velocity: 10.0
     has_acceleration_limits: false
     max_acceleration: 10.0

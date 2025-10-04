@@ -2,7 +2,6 @@
 
 initial_positions:
   gripper_left_joint: 0
-  gripper_right_joint: 0
   map_to_xaxis: 0
   xaxis_to_yaxis: 0
   yaxis_to_zaxis: 0

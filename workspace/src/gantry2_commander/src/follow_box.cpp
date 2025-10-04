@@ -29,14 +29,13 @@ void publishCommands()
   // contains a recent timestamp, or Servo will think the command is stale and will not move the robot.
   auto msg = std::make_unique<control_msgs::msg::JointJog>();
   msg->header.stamp = node_->now();
-  msg->joint_names.push_back("xaxis");
-  msg->joint_names.push_back("yaxis");
-  msg->joint_names.push_back("zaxis");
-  msg->velocities.push_back(0.03 + count_/100);
-  msg->velocities.push_back(0.04 + count_/100);
+  msg->joint_names.push_back("map_xaxis");
+  msg->joint_names.push_back("xaxis_to_yaxis");
+  msg->joint_names.push_back("zaxis_to_eemount");
+  msg->velocities.push_back(0.03);
+  msg->velocities.push_back(0.04);
   msg->velocities.push_back(0.04);
   joint_cmd_pub_->publish(std::move(msg));
-  ++count_;
 
 }
 // END_SUB_TUTORIAL
