@@ -93,6 +93,12 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 
+RUN apt-get update && apt-get install -y \
+    ros-humble-moveit-servo \
+    && rm -rf /var/lib/apt/lists/*
+
+
+
 RUN # Create a non-root user
 ARG USERNAME=rosdev
 ARG USER_UID=1000

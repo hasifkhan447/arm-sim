@@ -1,0 +1,20 @@
+digraph G {
+"eemount" -> "left_finger"[label=" Broadcaster: default_authority\nAverage rate: 20.208\nBuffer length: 4.8\nMost recent transform: 10.537\nOldest transform: 5.737\n"];
+"zaxis" -> "eemount"[label=" Broadcaster: default_authority\nAverage rate: 20.208\nBuffer length: 4.8\nMost recent transform: 10.537\nOldest transform: 5.737\n"];
+"eemount" -> "right_finger"[label=" Broadcaster: default_authority\nAverage rate: 20.208\nBuffer length: 4.8\nMost recent transform: 10.537\nOldest transform: 5.737\n"];
+"map" -> "xaxis"[label=" Broadcaster: default_authority\nAverage rate: 20.208\nBuffer length: 4.8\nMost recent transform: 10.537\nOldest transform: 5.737\n"];
+"xaxis" -> "yaxis"[label=" Broadcaster: default_authority\nAverage rate: 20.208\nBuffer length: 4.8\nMost recent transform: 10.537\nOldest transform: 5.737\n"];
+"yaxis" -> "zaxis"[label=" Broadcaster: default_authority\nAverage rate: 20.208\nBuffer length: 4.8\nMost recent transform: 10.537\nOldest transform: 5.737\n"];
+"map" -> "layer1"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"map" -> "layer2"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"map" -> "layer3"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"map" -> "layer4"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"map" -> "leg1"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"map" -> "leg2"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"map" -> "leg3"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"map" -> "leg4"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1759561852.0865667"[ shape=plaintext ] ;
+}->"map";
+}

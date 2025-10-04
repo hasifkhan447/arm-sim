@@ -36,7 +36,6 @@ ros2 launch six_dof_arm launch_moveit.py
 
 
 # What do I need to do?
-TODO: Figure out how to do task level description
-
-
-
+TODO: Based on ghufran's EE adjust the gripping and evaluate it
+TODO: Set up cameras and then do tracking 
+TODO: Do grasping of the cardboard box

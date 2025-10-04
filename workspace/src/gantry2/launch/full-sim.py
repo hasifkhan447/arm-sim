@@ -162,8 +162,7 @@ def generate_launch_description():
              output='screen',
              parameters=[
                  servo_params,
-                 moveit_config.robot_description,
-                 moveit_config.robot_description_semantic,
+                 moveit_config.to_dict()
                  ],
              )
 
