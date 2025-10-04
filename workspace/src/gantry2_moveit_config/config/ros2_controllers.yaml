@@ -23,6 +23,7 @@ prismatic_chain_controller:
       - zaxis_to_eemount
     command_interfaces:
       - position
+      - velocity
     state_interfaces:
       - position
       - velocity
@@ -33,6 +34,7 @@ ee_controller:
       - gripper_right_joint
     command_interfaces:
       - position
+      - velocity
     state_interfaces:
       - position
       - velocity
