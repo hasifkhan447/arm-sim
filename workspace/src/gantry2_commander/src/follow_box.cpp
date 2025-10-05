@@ -182,7 +182,8 @@ int main(int argc, char** argv)
   target_pose.pose.orientation = current_ee_tf.transform.rotation;
 
   // Modify it a little bit
-  target_pose.pose.position.x += 0.1;
+  target_pose.pose.position.x -= 0.05;
+  target_pose.pose.position.z -= 0.05;
 
   // resetTargetPose() can be used to clear the target pose and wait for a new one, e.g. when moving between multiple
   // waypoints

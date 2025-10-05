@@ -71,16 +71,15 @@ def generate_launch_description():
 
 
 
-
     node_robot_state_publisher = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        output='screen',
-        parameters=[
-            params,
-            {'use_sim_time': True}
-            ]
-    )
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            output='screen',
+            parameters=[
+                params,
+                {'use_sim_time': True},
+                ]
+            )
 
     load_joint_state_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller',
@@ -160,7 +159,7 @@ def generate_launch_description():
 
 
     box_follower = TimerAction(
-            period=15.0,
+            period=10.0,
             actions=[
                 Node(
                     package='gantry2_commander',
@@ -172,7 +171,7 @@ def generate_launch_description():
                         servo_params,
                         moveit_config.to_dict(),
                         ],
-                    arguments=['--ros-args', '--log-level', 'debug'],
+                    # arguments=['--ros-args', '--log-level', 'debug'],
                     remappings=[('joint_states', '/joint_states')],
 
                     )
