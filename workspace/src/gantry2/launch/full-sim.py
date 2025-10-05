@@ -76,7 +76,10 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
-        parameters=[params]
+        parameters=[
+            params,
+            {'use_sim_time': True}
+            ]
     )
 
     load_joint_state_controller = ExecuteProcess(
@@ -157,7 +160,7 @@ def generate_launch_description():
 
 
     box_follower = TimerAction(
-            period=10.0,
+            period=15.0,
             actions=[
                 Node(
                     package='gantry2_commander',

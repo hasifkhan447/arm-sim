@@ -92,6 +92,8 @@ int main(int argc, char** argv)
   rclcpp::init(argc, argv);
   rclcpp::Node::SharedPtr node = rclcpp::Node::make_shared("pose_tracking_demo");
 
+  node->set_parameter(rclcpp::Parameter("use_sim_time", true));
+
   rclcpp::executors::SingleThreadedExecutor executor;
   executor.add_node(node);
   std::thread executor_thread([&executor]() { executor.spin(); });
@@ -122,12 +124,28 @@ int main(int argc, char** argv)
   planning_scene_monitor->startStateMonitor(servo_parameters->joint_topic);
   planning_scene_monitor->startPublishingPlanningScene(planning_scene_monitor::PlanningSceneMonitor::UPDATE_SCENE);
 
-  // Wait for Planning Scene Monitor to setup
-  if (!planning_scene_monitor->waitForCurrentRobotState(node->now(), 5.0 /* seconds */))
-  {
-    RCLCPP_ERROR_STREAM(LOGGER, "Error waiting for current robot state in PlanningSceneMonitor.");
-    exit(EXIT_FAILURE);
-  }
+  // // Wait for Planning Scene Monitor to setup
+  // if (!planning_scene_monitor->waitForCurrentRobotState(node->now(), 5.0 /* seconds */))
+  // {
+  //   RCLCPP_ERROR_STREAM(LOGGER, "Error waiting for current robot state in PlanningSceneMonitor.");
+  //   exit(EXIT_FAILURE);
+  // }
+
+
+  const double timeout = 5.0;  // seconds
+  if (!planning_scene_monitor->waitForCurrentRobotState(node->now(), timeout)) {
+    RCLCPP_WARN(rclcpp::get_logger("pose_tracking_demo"),
+        "PlanningSceneMonitor not ready after %.1f s, waiting again...", timeout);
+    // You can retry or exit gracefully
+    rclcpp::sleep_for(std::chrono::seconds(2));
+    if (!planning_scene_monitor->waitForCurrentRobotState(node->now(), timeout)) {
+      RCLCPP_ERROR(rclcpp::get_logger("pose_tracking_demo"),
+          "Still no robot state, aborting PoseTracking init");
+      return 0; //give this a good error code
+    }
+}
+
+
 
   // Create the pose tracker
   moveit_servo::PoseTracking tracker(node, servo_parameters, planning_scene_monitor);

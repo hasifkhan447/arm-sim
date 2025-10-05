@@ -70,3 +70,17 @@ check_collisions: false  # Check collisions?
 collision_check_rate: 10.0  # [Hz] Collision-checking can easily bog down a CPU if done too often.
 self_collision_proximity_threshold: 0.01  # Start decelerating when a self-collision is this far [m]
 scene_collision_proximity_threshold: 0.02  # Start decelerating when a scene collision is this far [m
+
+windup_limit: 0.5
+x_proportional_gain: 1.5
+y_proportional_gain: 1.5
+z_proportional_gain: 1.5
+x_integral_gain: 0.0
+y_integral_gain: 0.0
+z_integral_gain: 0.0
+x_derivative_gain: 0.1
+y_derivative_gain: 0.1
+z_derivative_gain: 0.1
+angular_proportional_gain: 2.0
+angular_integral_gain: 0.0
+angular_derivative_gain: 0.1
