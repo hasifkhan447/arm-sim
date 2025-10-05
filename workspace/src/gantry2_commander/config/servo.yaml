@@ -9,6 +9,7 @@
 publish_period: 0.01  # 1/Nominal publish rate [seconds]
 max_expected_latency: 0.1  # delay between sending a command and the robot executing it [seconds]
 
+
 command_in_type: "speed_units"  # "unitless"> in the range [-1:1], as if from joystick. "speed_units"> cmds are in m/s and rad/s
 
 # scale:
@@ -24,18 +25,18 @@ command_out_type: trajectory_msgs/JointTrajectory
 
 # What to publish? Can save some bandwidth as most robots only require positions or velocities
 publish_joint_positions: true
-publish_joint_velocities: true
+publish_joint_velocities: false
 publish_joint_accelerations: false
 
 ## Plugins for smoothing outgoing commands
-use_smoothing: true
+use_smoothing: false
 smoothing_filter_plugin_name: "online_signal_smoothing::ButterworthFilterPlugin"
 
 # If is_primary_planning_scene_monitor is set to true, the Servo server's PlanningScene advertises the /get_planning_scene service,
 # which other nodes can use as a source for information about the planning environment.
 # NOTE: If a different node in your system is responsible for the "primary" planning scene instance (e.g. the MoveGroup node),
 # then is_primary_planning_scene_monitor needs to be set to false.
-is_primary_planning_scene_monitor: true
+is_primary_planning_scene_monitor: false
 check_octomap_collisions: false  # Check collision against the octomap (if a 3D sensor plugin is available)
 
 ## MoveIt properties
@@ -61,9 +62,11 @@ joint_command_in_topic: ~/delta_joint_cmds  # Topic for incoming joint angle com
 joint_topic: /joint_states  # Get joint states from this topic
 status_topic: ~/status  # Publish status to this topic
 command_out_topic: /prismatic_chain_controller/joint_trajectory  # Publish outgoing commands here
+# command_out_topic: /test_out  # Publish outgoing commands here
 
+use_gazebo: true
 ## Collision checking for the entire robot body
-check_collisions: true  # Check collisions?
+check_collisions: false  # Check collisions?
 collision_check_rate: 10.0  # [Hz] Collision-checking can easily bog down a CPU if done too often.
 self_collision_proximity_threshold: 0.01  # Start decelerating when a self-collision is this far [m]
 scene_collision_proximity_threshold: 0.02  # Start decelerating when a scene collision is this far [m

@@ -1,118 +1,209 @@
-// ROS
-#include <rclcpp/rclcpp.hpp>
+/*******************************************************************************
+ *      Title     : pose_tracking_example.cpp
+ *      Project   : moveit_servo
+ *      Created   : 09/04/2020
+ *      Author    : Adam Pettinger
+ *
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, Los Alamos National Security, LLC
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * * Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *******************************************************************************/
 
-// Servo
-#include <moveit_servo/servo_parameters.h>
+#include <std_msgs/msg/int8.hpp>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+
 #include <moveit_servo/servo.h>
-#include <moveit/planning_scene_monitor/planning_scene_monitor.h>
+#include <moveit_servo/pose_tracking.h>
+#include <moveit_servo/status_codes.h>
+#include <moveit_servo/servo_parameters.h>
+#include <moveit_servo/servo_parameters.h>
+#include <moveit_servo/make_shared_from_pool.h>
+#include <thread>
 
-using namespace std::chrono_literals;
+static const rclcpp::Logger LOGGER = rclcpp::get_logger("moveit_servo.pose_tracking_demo");
 
-static const rclcpp::Logger LOGGER = rclcpp::get_logger("moveit2_tutorials.servo_demo_node.cpp");
-
-// BEGIN_TUTORIAL
-
-// Setup
-// ^^^^^
-// First we declare pointers to the node and publisher that will publish commands to Servo
-rclcpp::Node::SharedPtr node_;
-rclcpp::Publisher<control_msgs::msg::JointJog>::SharedPtr joint_cmd_pub_;
-size_t count_ = 0;
-
-// BEGIN_SUB_TUTORIAL publishCommands
-// Here is the timer callback for publishing commands. The C++ interface sends commands through internal ROS topics,
-// just like if Servo was launched using ServoNode.
-void publishCommands()
+// Class for monitoring status of moveit_servo
+class StatusMonitor
 {
-  // First we will publish 100 joint jogging commands. The :code:`joint_names` field allows you to specify individual
-  // joints to move, at the velocity in the corresponding :code:`velocities` field. It is important that the message
-  // contains a recent timestamp, or Servo will think the command is stale and will not move the robot.
-  auto msg = std::make_unique<control_msgs::msg::JointJog>();
-  msg->header.stamp = node_->now();
-  msg->joint_names.push_back("map_xaxis");
-  msg->joint_names.push_back("xaxis_to_yaxis");
-  msg->joint_names.push_back("zaxis_to_eemount");
-  msg->velocities.push_back(0.03);
-  msg->velocities.push_back(0.04);
-  msg->velocities.push_back(0.04);
-  joint_cmd_pub_->publish(std::move(msg));
+public:
+  StatusMonitor(const rclcpp::Node::SharedPtr& node, const std::string& topic)
+  {
+    RCLCPP_INFO(LOGGER, "Constructing class");
+    sub_ = node->create_subscription<std_msgs::msg::Int8>(topic, rclcpp::SystemDefaultsQoS(),
+                                                          [this](const std_msgs::msg::Int8::ConstSharedPtr& msg) {
+                                                            return statusCB(msg);
+                                                          });
+  }
 
-}
-// END_SUB_TUTORIAL
+private:
+  void statusCB(const std_msgs::msg::Int8::ConstSharedPtr& msg)
+  {
+    moveit_servo::StatusCode latest_status = static_cast<moveit_servo::StatusCode>(msg->data);
+    if (latest_status != status_)
+    {
+      status_ = latest_status;
+      const auto& status_str = moveit_servo::SERVO_STATUS_CODE_MAP.at(status_);
+      RCLCPP_INFO_STREAM(LOGGER, "Servo status: " << status_str);
+    }
+  }
 
-// Next we will set up the node, planning_scene_monitor, and collision object
+  moveit_servo::StatusCode status_ = moveit_servo::StatusCode::INVALID;
+  rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr sub_;
+};
+
+/**
+ * Instantiate the pose tracking interface.
+ * Send a pose slightly different from the starting pose
+ * Then keep updating the target pose a little bit
+ */
 int main(int argc, char** argv)
 {
+
+  RCLCPP_INFO(LOGGER, "Started");
+
+
   rclcpp::init(argc, argv);
-  rclcpp::NodeOptions node_options;
+  rclcpp::Node::SharedPtr node = rclcpp::Node::make_shared("pose_tracking_demo");
 
-  // This is false for now until we fix the QoS settings in moveit to enable intra process comms
-  node_options.use_intra_process_comms(false);
-  node_ = std::make_shared<rclcpp::Node>("servo_demo_node", node_options);
+  rclcpp::executors::SingleThreadedExecutor executor;
+  executor.add_node(node);
+  std::thread executor_thread([&executor]() { executor.spin(); });
 
-  // Pause for RViz to come up. This is necessary in an integrated demo with a single launch file
-  rclcpp::sleep_for(std::chrono::seconds(4));
+  auto servo_parameters = moveit_servo::ServoParameters::makeServoParameters(node);
 
-  // Create the planning_scene_monitor. We need to pass this to Servo's constructor, and we should set it up first
-  // before initializing any collision objects
-  auto tf_buffer = std::make_shared<tf2_ros::Buffer>(node_->get_clock());
-  auto planning_scene_monitor = std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(
-      node_, "robot_description", tf_buffer, "planning_scene_monitor");
-
-  // Here we make sure the planning_scene_monitor is updating in real time from the joint states topic
-  if (planning_scene_monitor->getPlanningScene())
+  if (servo_parameters == nullptr)
   {
-    planning_scene_monitor->startStateMonitor("/joint_states");
-    planning_scene_monitor->setPlanningScenePublishingFrequency(25);
-    planning_scene_monitor->startPublishingPlanningScene(planning_scene_monitor::PlanningSceneMonitor::UPDATE_SCENE,
-                                                         "/moveit_servo/publish_planning_scene");
-    planning_scene_monitor->startSceneMonitor();
-    planning_scene_monitor->providePlanningSceneService();
-  }
-  else
-  {
-    RCLCPP_ERROR(LOGGER, "Planning scene not configured");
-    return EXIT_FAILURE;
+    RCLCPP_FATAL(LOGGER, "Could not get servo parameters!");
+    exit(EXIT_FAILURE);
   }
 
-  // These are the publishers that will send commands to MoveIt Servo. Two command types are supported: JointJog
-  // messages which will directly jog the robot in the joint space, and TwistStamped messages which will move the
-  // specified link with the commanded Cartesian velocity. In this demo, we jog the end effector link.
-  joint_cmd_pub_ = node_->create_publisher<control_msgs::msg::JointJog>("servo_demo_node/delta_joint_cmds", 10);
-
-  // Initializing Servo
-  // ^^^^^^^^^^^^^^^^^^
-  // Servo requires a number of parameters to dictate its behavior. These can be read automatically by using the
-  // :code:`makeServoParameters` helper function
-  auto servo_parameters = moveit_servo::ServoParameters::makeServoParameters(node_);
-  if (!servo_parameters)
+  // Load the planning scene monitor
+  planning_scene_monitor::PlanningSceneMonitorPtr planning_scene_monitor;
+  planning_scene_monitor = std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(node, "robot_description");
+  if (!planning_scene_monitor->getPlanningScene())
   {
-    RCLCPP_FATAL(LOGGER, "Failed to load the servo parameters");
-    return EXIT_FAILURE;
+    RCLCPP_ERROR_STREAM(LOGGER, "Error in setting up the PlanningSceneMonitor.");
+    exit(EXIT_FAILURE);
   }
 
-  // Initialize the Servo C++ interface by passing a pointer to the node, the parameters, and the PSM
-  auto servo = std::make_unique<moveit_servo::Servo>(node_, servo_parameters, planning_scene_monitor);
+  planning_scene_monitor->providePlanningSceneService();
+  planning_scene_monitor->startSceneMonitor();
+  planning_scene_monitor->startWorldGeometryMonitor(
+      planning_scene_monitor::PlanningSceneMonitor::DEFAULT_COLLISION_OBJECT_TOPIC,
+      planning_scene_monitor::PlanningSceneMonitor::DEFAULT_PLANNING_SCENE_WORLD_TOPIC,
+      false /* skip octomap monitor */);
+  planning_scene_monitor->startStateMonitor(servo_parameters->joint_topic);
+  planning_scene_monitor->startPublishingPlanningScene(planning_scene_monitor::PlanningSceneMonitor::UPDATE_SCENE);
 
-  RCLCPP_INFO(LOGGER, "Successfully initialized");
-  // You can start Servo directly using the C++ interface. If launched using the alternative ServoNode, a ROS
-  // service is used to start Servo. Before it is started, MoveIt Servo will not accept any commands or move the robot
-  servo->start();
+  // Wait for Planning Scene Monitor to setup
+  if (!planning_scene_monitor->waitForCurrentRobotState(node->now(), 5.0 /* seconds */))
+  {
+    RCLCPP_ERROR_STREAM(LOGGER, "Error waiting for current robot state in PlanningSceneMonitor.");
+    exit(EXIT_FAILURE);
+  }
 
-  // Sending Commands
-  // ^^^^^^^^^^^^^^^^
-  // For this demo, we will use a simple ROS timer to send joint and twist commands to the robot
-  rclcpp::TimerBase::SharedPtr timer = node_->create_wall_timer(50ms, publishCommands);
+  // Create the pose tracker
+  moveit_servo::PoseTracking tracker(node, servo_parameters, planning_scene_monitor);
 
-  // CALL_SUB_TUTORIAL publishCommands
+  RCLCPP_INFO_STREAM(LOGGER, "Created pose tracker");
 
-  // We use a multithreaded executor here because Servo has concurrent processes for moving the robot and avoiding collisions
-  auto executor = std::make_unique<rclcpp::executors::MultiThreadedExecutor>();
-  executor->add_node(node_);
-  executor->spin();
+  // Make a publisher for sending pose commands
+  auto target_pose_pub =
+      node->create_publisher<geometry_msgs::msg::PoseStamped>("target_pose", rclcpp::SystemDefaultsQoS());
 
-  // END_TUTORIAL
+
+  // Subscribe to servo status (and log it when it changes)
+  StatusMonitor status_monitor(node, servo_parameters->status_topic);
+
+  RCLCPP_INFO_STREAM(LOGGER, "Obstained servo status");
+
+  Eigen::Vector3d lin_tol{ 0.001, 0.001, 0.001 };
+  double rot_tol = 0.01;
+
+
+  RCLCPP_INFO_STREAM(LOGGER, "Going to pull EE transform info");
+
+
+  // Get the current EE transform
+  geometry_msgs::msg::TransformStamped current_ee_tf;
+  tracker.getCommandFrameTransform(current_ee_tf);
+
+  // Convert it to a Pose
+  geometry_msgs::msg::PoseStamped target_pose;
+  target_pose.header.frame_id = current_ee_tf.header.frame_id;
+  target_pose.pose.position.x = current_ee_tf.transform.translation.x;
+  target_pose.pose.position.y = current_ee_tf.transform.translation.y;
+  target_pose.pose.position.z = current_ee_tf.transform.translation.z;
+  target_pose.pose.orientation = current_ee_tf.transform.rotation;
+
+  // Modify it a little bit
+  target_pose.pose.position.x += 0.1;
+
+  // resetTargetPose() can be used to clear the target pose and wait for a new one, e.g. when moving between multiple
+  // waypoints
+  tracker.resetTargetPose();
+
+
+  RCLCPP_INFO_STREAM(LOGGER, "Start to publish pose info");
+
+  // Publish target pose
+  target_pose.header.stamp = node->now();
+  target_pose_pub->publish(target_pose);
+
+  // Run the pose tracking in a new thread
+  std::thread move_to_pose_thread([&tracker, &lin_tol, &rot_tol] {
+    moveit_servo::PoseTrackingStatusCode tracking_status =
+        tracker.moveToPose(lin_tol, rot_tol, 0.1 /* target pose timeout */);
+    RCLCPP_INFO_STREAM(LOGGER, "Pose tracker exited with status: "
+                                   << moveit_servo::POSE_TRACKING_STATUS_CODE_MAP.at(tracking_status));
+  });
+
+  rclcpp::WallRate loop_rate(50);
+  for (size_t i = 0; i < 500; ++i)
+  {
+    // Modify the pose target a little bit each cycle
+    // This is a dynamic pose target
+    target_pose.pose.position.z += 0.0004;
+    target_pose.header.stamp = node->now();
+    target_pose_pub->publish(target_pose);
+
+    loop_rate.sleep();
+  }
+
+  // Make sure the tracker is stopped and clean up
+  move_to_pose_thread.join();
+
+  // Kill executor thread before shutdown
+  executor.cancel();
+  executor_thread.join();
 
   rclcpp::shutdown();
-  return 0;
+  return EXIT_SUCCESS;
 }

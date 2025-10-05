@@ -3,7 +3,7 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch import LaunchDescription
-from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
+from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler, TimerAction
 from launch.event_handlers import OnProcessExit
 from launch_ros.actions import Node 
 import xacro 
@@ -155,17 +155,26 @@ def generate_launch_description():
     )
 
 
-    box_follower = Node(
-            package='gantry2_commander',
-             executable='follow_box',
-             name='follow_box',
-             output='screen',
-             parameters=[
-                 servo_params,
-                 moveit_config.to_dict()
-                 ],
-             )
 
+    box_follower = TimerAction(
+            period=10.0,
+            actions=[
+                Node(
+                    package='gantry2_commander',
+                    executable='follow_box',
+                    name='follow_box',
+                    output='screen',
+                    parameters=[
+                        {'use_sim_time': True},
+                        servo_params,
+                        moveit_config.to_dict(),
+                        ],
+                    arguments=['--ros-args', '--log-level', 'debug'],
+                    remappings=[('joint_states', '/joint_states')],
+
+                    )
+                ]
+            )
 
 
 

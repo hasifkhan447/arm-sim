@@ -14,6 +14,7 @@ controller_manager:
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
+
 prismatic_chain_controller:
   ros__parameters:
     joints:
