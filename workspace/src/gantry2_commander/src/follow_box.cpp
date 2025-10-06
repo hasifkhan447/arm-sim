@@ -242,12 +242,13 @@ int main(int argc, char** argv)
   // Run the pose tracking in a new thread
   std::thread move_to_pose_thread([&tracker, &lin_tol, &rot_tol] {
     moveit_servo::PoseTrackingStatusCode tracking_status =
-        tracker.moveToPose(lin_tol, rot_tol, 0.1 /* target pose timeout */);
+        tracker.moveToPose(lin_tol, rot_tol, 2.0 /* target pose timeout */);
     RCLCPP_INFO_STREAM(LOGGER, "Pose tracker exited with status: "
                                    << moveit_servo::POSE_TRACKING_STATUS_CODE_MAP.at(tracking_status));
   });
 
-  rclcpp::WallRate loop_rate(50);
+  // rclcpp::WallRate loop_rate(50);
+  rclcpp::Rate loop_rate(50);
   for (size_t i = 0; i < 500; ++i)
   {
     // target_pose.pose.position.z += 0.0004;

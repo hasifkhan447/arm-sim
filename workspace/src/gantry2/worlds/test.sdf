@@ -30,7 +30,7 @@
       </visual>
     </link>
     <plugin name="conveyor_belt_plugin" filename="libconveyer_plugin.so">
-      <belt_velocity>0.2</belt_velocity>
+      <belt_velocity>0.1</belt_velocity>
       <belt_direction>-1 0 0</belt_direction>
     </plugin>
   </model>

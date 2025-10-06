@@ -64,6 +64,11 @@ status_topic: ~/status  # Publish status to this topic
 command_out_topic: /prismatic_chain_controller/joint_trajectory  # Publish outgoing commands here
 # command_out_topic: /test_out  # Publish outgoing commands here
 
+
+
+low_latency_mode: true  # Set this to true to publish as soon as an incoming Twist command is received (publish_period is ignored)
+incoming_command_timeout:  0.1  # Stop servoing if X seconds elapse without a new command
+
 use_gazebo: true
 ## Collision checking for the entire robot body
 check_collisions: false  # Check collisions?
@@ -75,12 +80,12 @@ windup_limit: 0.5
 x_proportional_gain: 1.5
 y_proportional_gain: 1.5
 z_proportional_gain: 1.5
-x_integral_gain: 0.0
-y_integral_gain: 0.0
-z_integral_gain: 0.0
+x_integral_gain: 0.1
+y_integral_gain: 0.1
+z_integral_gain: 0.1
 x_derivative_gain: 0.1
 y_derivative_gain: 0.1
 z_derivative_gain: 0.1
 angular_proportional_gain: 2.0
-angular_integral_gain: 0.0
+angular_integral_gain: 0.1
 angular_derivative_gain: 0.1
