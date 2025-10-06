@@ -27,7 +27,7 @@
     <child link="eemount" />
     <origin xyz="-${length_bar/2 + width_bar} 0 0" rpy="0 ${pi/2} 0" />
     <axis xyz="0 0 1" />
-    <limit lower="-1.57" upper="1.57" effort="5" velocity="1" />
+    <limit lower="-3.57" upper="3.57" effort="5" velocity="1" />
   </joint>
 
   <!-- Left finger -->

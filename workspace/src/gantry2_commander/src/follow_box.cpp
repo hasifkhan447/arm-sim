@@ -248,7 +248,7 @@ int main(int argc, char** argv)
   });
 
   // rclcpp::WallRate loop_rate(50);
-  rclcpp::Rate loop_rate(50);
+  rclcpp::Rate loop_rate(1);
   for (size_t i = 0; i < 500; ++i)
   {
     // target_pose.pose.position.z += 0.0004;
