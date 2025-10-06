@@ -253,6 +253,9 @@ int main(int argc, char** argv)
   {
     // target_pose.pose.position.z += 0.0004;
     second_target_pose = getGazeboPose("cardboard_box");
+    second_target_pose.pose.position.z = current_ee_tf.transform.translation.z;
+
+
 
     second_target_pose.header.stamp = node->now();
     target_pose_pub->publish(second_target_pose);
