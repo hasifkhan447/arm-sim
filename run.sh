@@ -1,5 +1,17 @@
 #!/bin/bash
 
+
+if [[ "$1" == "refresh" ]]; then
+  echo "[INFO] Refresh requested. Killing and removing existing container..."
+  if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+    docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
+    echo "[INFO] Container '$CONTAINER_NAME' has been removed."
+  else
+    echo "[INFO] No existing container named '$CONTAINER_NAME' found."
+  fi
+fi
+
+
 USERNAME="rosdev"
 IMAGE_NAME="ros2_humble_gazebo:dev"
 CONTAINER_NAME="ros2_gazebo_dev"
@@ -40,8 +52,6 @@ DOCKER_ARGS=(
     "${MOUNTS[@]}"
 )
 
-# Remove existing container
-# docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
 
 if docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
   echo "Attaching new terminal to running container..."

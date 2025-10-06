@@ -159,7 +159,7 @@ def generate_launch_description():
 
 
     box_follower = TimerAction(
-            period=10.0,
+            period=5.0,
             actions=[
                 Node(
                     package='gantry2_commander',

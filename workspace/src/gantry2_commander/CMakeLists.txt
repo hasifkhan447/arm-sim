@@ -9,6 +9,8 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
 
+find_package(gazebo_msgs REQUIRED)
+
 find_package(moveit_ros_move_group REQUIRED)
 find_package(moveit_servo REQUIRED)
 
@@ -28,6 +30,7 @@ ament_target_dependencies(follow_box
   rclcpp 
   tf2_ros 
   geometry_msgs
+  gazebo_msgs
   trajectory_msgs
   moveit_core 
   moveit_ros_planning_interface

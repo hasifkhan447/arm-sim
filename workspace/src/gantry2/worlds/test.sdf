@@ -454,5 +454,18 @@
   </link>
 </model>
 	<plugin name="gazebo_link_attacher" filename="libgazebo_link_attacher.so"><model_name>gantry</model_name><attach_service_name>ATTACHLINK</attach_service_name><detach_service_name>DETACHLINK</detach_service_name></plugin>
+
+
+  
+
+  <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+    <ros>
+      <namespace>/gazebo</namespace>
+    </ros>
+
+    <update_rate>1.0</update_rate>
+  </plugin>
+
+
 </world>
 </sdf>

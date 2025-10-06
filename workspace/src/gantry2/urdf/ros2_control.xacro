@@ -106,7 +106,11 @@
     <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
       <parameters>$(find gantry2_moveit_config)/config/ros2_controllers.yaml</parameters>
     </plugin>
+
   </gazebo>
+
+
+
 
 
   <!--

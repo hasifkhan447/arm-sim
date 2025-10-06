@@ -11,6 +11,7 @@
 
   <depend>moveit_ros_planning_interface</depend>
   <depend>moveit_servo</depend>
+  <depend>gazebo_msgs</depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_action</depend>
 <depend>control_msgs</depend>

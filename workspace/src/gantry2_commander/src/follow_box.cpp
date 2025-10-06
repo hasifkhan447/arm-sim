@@ -38,6 +38,8 @@
 
 #include <std_msgs/msg/int8.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
+#include <gazebo_msgs/srv/get_entity_state.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 
 #include <moveit_servo/servo.h>
 #include <moveit_servo/pose_tracking.h>
@@ -77,6 +79,10 @@ private:
   moveit_servo::StatusCode status_ = moveit_servo::StatusCode::INVALID;
   rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr sub_;
 };
+
+
+
+
 
 /**
  * Instantiate the pose tracking interface.
@@ -182,19 +188,19 @@ int main(int argc, char** argv)
   target_pose.pose.orientation = current_ee_tf.transform.rotation;
 
   // Modify it a little bit
-  target_pose.pose.position.x -= 0.05;
-  target_pose.pose.position.z -= 0.05;
+  target_pose.pose.position.x -= 1.0;
+  target_pose.pose.position.z -= 1.0;
 
-  // resetTargetPose() can be used to clear the target pose and wait for a new one, e.g. when moving between multiple
-  // waypoints
+
+  // resetTargetPose() can be used to clear the target pose and wait for a new one, e.g. when moving between multiple waypoints
   tracker.resetTargetPose();
-
-
   RCLCPP_INFO_STREAM(LOGGER, "Start to publish pose info");
 
   // Publish target pose
   target_pose.header.stamp = node->now();
   target_pose_pub->publish(target_pose);
+
+
 
   // Run the pose tracking in a new thread
   std::thread move_to_pose_thread([&tracker, &lin_tol, &rot_tol] {
@@ -207,8 +213,6 @@ int main(int argc, char** argv)
   rclcpp::WallRate loop_rate(50);
   for (size_t i = 0; i < 500; ++i)
   {
-    // Modify the pose target a little bit each cycle
-    // This is a dynamic pose target
     target_pose.pose.position.z += 0.0004;
     target_pose.header.stamp = node->now();
     target_pose_pub->publish(target_pose);
