@@ -83,6 +83,36 @@ private:
 
 
 
+geometry_msgs::msg::PoseStamped getGazeboPose(
+    const std::string& entity_name)
+{
+  auto temp_node = rclcpp::Node::make_shared("gazebo_pose_client");
+  auto client = temp_node->create_client<gazebo_msgs::srv::GetEntityState>("/gazebo/get_entity_state");
+  auto request = std::make_shared<gazebo_msgs::srv::GetEntityState::Request>();
+  request->name = entity_name;
+  request->reference_frame = "map";
+
+  if (!client->wait_for_service(std::chrono::seconds(2))) {
+    RCLCPP_WARN(temp_node->get_logger(), "Gazebo get_entity_state service not available!");
+    return geometry_msgs::msg::PoseStamped();
+  }
+
+  auto result_future = client->async_send_request(request);
+  if (rclcpp::spin_until_future_complete(temp_node, result_future, std::chrono::seconds(2)) !=
+      rclcpp::FutureReturnCode::SUCCESS) {
+    RCLCPP_WARN(temp_node->get_logger(), "Failed to call get_entity_state for %s", entity_name.c_str());
+    return geometry_msgs::msg::PoseStamped();
+  }
+
+  auto response = result_future.get();
+  geometry_msgs::msg::PoseStamped pose_msg;
+  pose_msg.header.stamp = temp_node->now();
+  pose_msg.header.frame_id = "map";
+  pose_msg.pose = response->state.pose;
+
+  return pose_msg;
+}
+
 
 /**
  * Instantiate the pose tracking interface.
@@ -174,6 +204,13 @@ int main(int argc, char** argv)
 
   RCLCPP_INFO_STREAM(LOGGER, "Going to pull EE transform info");
 
+  auto second_target_pose = getGazeboPose("cardboard_box");
+
+  RCLCPP_INFO_STREAM(LOGGER, "Pulled target pose");
+  
+  RCLCPP_INFO_STREAM(LOGGER, second_target_pose.pose.position.x);
+  RCLCPP_INFO_STREAM(LOGGER, second_target_pose.pose.position.y);
+  RCLCPP_INFO_STREAM(LOGGER, second_target_pose.pose.position.z);
 
   // Get the current EE transform
   geometry_msgs::msg::TransformStamped current_ee_tf;
@@ -213,9 +250,11 @@ int main(int argc, char** argv)
   rclcpp::WallRate loop_rate(50);
   for (size_t i = 0; i < 500; ++i)
   {
-    target_pose.pose.position.z += 0.0004;
-    target_pose.header.stamp = node->now();
-    target_pose_pub->publish(target_pose);
+    // target_pose.pose.position.z += 0.0004;
+    second_target_pose = getGazeboPose("cardboard_box");
+
+    second_target_pose.header.stamp = node->now();
+    target_pose_pub->publish(second_target_pose);
 
     loop_rate.sleep();
   }
