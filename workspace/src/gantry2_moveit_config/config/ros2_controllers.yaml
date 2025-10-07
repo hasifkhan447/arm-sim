@@ -1,7 +1,7 @@
 # This config file is used by ros2_control
 controller_manager:
   ros__parameters:
-    update_rate: 300  # Hz
+    update_rate: 100  # Hz
 
     prismatic_chain_controller:
       type: joint_trajectory_controller/JointTrajectoryController
@@ -11,9 +11,12 @@ controller_manager:
       type: joint_trajectory_controller/JointTrajectoryController
 
 
+    gripping_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
-
 
 prismatic_chain_controller:
   ros__parameters:
@@ -32,6 +35,17 @@ ee_controller:
     joints:
       - gripper_left_joint
       - gripper_right_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+gripping_controller:
+  ros__parameters:
+    joints:
+      - yaxis_to_zaxis
+      - zaxis_to_eemount
+      - gripper_left_joint
     command_interfaces:
       - position
     state_interfaces:

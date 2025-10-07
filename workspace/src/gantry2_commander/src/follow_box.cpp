@@ -47,7 +47,24 @@
 #include <moveit_servo/servo_parameters.h>
 #include <moveit_servo/servo_parameters.h>
 #include <moveit_servo/make_shared_from_pool.h>
+
+#include <memory>
+#include <rclcpp/rclcpp.hpp>
+#include <rclcpp_action/rclcpp_action.hpp>
+#include <moveit/move_group_interface/move_group_interface.h>
+#include <control_msgs/action/follow_joint_trajectory.hpp>
+#include <linkattacher_msgs/srv/attach_link.hpp>
+#include <linkattacher_msgs/srv/detach_link.hpp>
+
+
 #include <thread>
+
+
+
+using moveit::planning_interface::MoveGroupInterface;
+using FollowJointTrajectory = control_msgs::action::FollowJointTrajectory;
+using GoalHandleFollowJointTrajectory = rclcpp_action::ClientGoalHandle<FollowJointTrajectory>;
+
 
 static const rclcpp::Logger LOGGER = rclcpp::get_logger("moveit_servo.pose_tracking_demo");
 
@@ -113,6 +130,115 @@ geometry_msgs::msg::PoseStamped getGazeboPose(
   return pose_msg;
 }
 
+bool plan_and_execute(MoveGroupInterface &move_group, const std::vector<double> &targets, 
+                      rclcpp::Logger logger, const std::string& description = "")
+{
+    RCLCPP_INFO(logger, "Planning to: %s", description.c_str());
+    
+    move_group.setJointValueTarget(targets);
+    move_group.setPlanningTime(10.0);
+    move_group.setGoalPositionTolerance(0.01);
+    move_group.setNumPlanningAttempts(10);
+    
+    MoveGroupInterface::Plan plan;
+    bool success = static_cast<bool>(move_group.plan(plan));
+    
+    if (success) {
+        RCLCPP_INFO(logger, "Plan succeeded, executing...");
+        auto result = move_group.execute(plan);
+        if (result != moveit::core::MoveItErrorCode::SUCCESS) {
+            RCLCPP_ERROR(logger, "Execution failed with error code: %d", result.val);
+            return false;
+        }
+        rclcpp::sleep_for(std::chrono::milliseconds(500));
+        return true;
+    } else {
+        RCLCPP_ERROR(logger, "Planning failed for: %s", description.c_str());
+    }
+    return success;
+}
+
+// New: Attach link using service
+bool attach_link(rclcpp::Node::SharedPtr node, rclcpp::Logger logger, const std::string& entity_name, const std::string& link_name)
+{
+    auto client = node->create_client<linkattacher_msgs::srv::AttachLink>("/ATTACHLINK");
+    if (!client->wait_for_service(std::chrono::seconds(5))) {
+        RCLCPP_ERROR(logger, "Attach service not available!");
+        return false;
+    }
+    
+    auto request = std::make_shared<linkattacher_msgs::srv::AttachLink::Request>();
+    request->model1_name = "gantry";  // Adjust to your robot model name
+    request->link1_name = "left_finger";   // Adjust to your gripper finger link
+    request->model2_name = entity_name;
+    request->link2_name = link_name;         // Box base link
+    
+    auto result_future = client->async_send_request(request);
+    if (rclcpp::spin_until_future_complete(node, result_future, std::chrono::seconds(5)) !=
+        rclcpp::FutureReturnCode::SUCCESS)
+    {
+        RCLCPP_ERROR(logger, "Failed to call attach service");
+        return false;
+    }
+    
+    RCLCPP_INFO(logger, "Attachment successful");
+    return true;
+}
+
+// New: Detach link using service
+bool detach_link(rclcpp::Node::SharedPtr node, rclcpp::Logger logger, const std::string& entity_name, const std::string& link_name)
+{
+    auto client = node->create_client<linkattacher_msgs::srv::DetachLink>("/DETACHLINK");
+    if (!client->wait_for_service(std::chrono::seconds(5))) {
+        RCLCPP_ERROR(logger, "Detach service not available!");
+        return false;
+    }
+    
+    auto request = std::make_shared<linkattacher_msgs::srv::DetachLink::Request>();
+    request->model1_name = "gantry";  // Adjust to your robot model name
+    request->link1_name = "left_finger";   // Adjust to your gripper finger link
+    request->model2_name = entity_name;
+    request->link2_name = link_name;         // Box base link
+    
+    auto result_future = client->async_send_request(request);
+    if (rclcpp::spin_until_future_complete(node, result_future, std::chrono::seconds(5)) !=
+        rclcpp::FutureReturnCode::SUCCESS)
+    {
+        RCLCPP_ERROR(logger, "Failed to call detach service");
+        return false;
+    }
+    
+    RCLCPP_INFO(logger, "Detachment successful");
+    return true;
+}
+
+
+void publishTargetPoseLoop(
+    const rclcpp::Node::SharedPtr &node,
+    const rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr &target_pose_pub,
+    const geometry_msgs::msg::TransformStamped &current_ee_tf,
+    int num_iterations = 500,
+    double rate_hz = 1.0)
+{
+  rclcpp::Rate loop_rate(rate_hz);
+
+  for (int i = 0; i < num_iterations && rclcpp::ok(); ++i)
+  {
+    geometry_msgs::msg::PoseStamped second_target_pose = getGazeboPose("cardboard_box");
+
+    // Sync Z-position with current EE transform
+    second_target_pose.pose.position.z = current_ee_tf.transform.translation.z;
+
+    // Timestamp and publish
+    second_target_pose.header.stamp = node->now();
+    target_pose_pub->publish(second_target_pose);
+
+    loop_rate.sleep();
+  }
+
+  RCLCPP_INFO(node->get_logger(), "Finished publishing %d poses.", num_iterations);
+}
+
 
 /**
  * Instantiate the pose tracking interface.
@@ -124,6 +250,8 @@ int main(int argc, char** argv)
 
   RCLCPP_INFO(LOGGER, "Started");
 
+
+  auto prismatic_chain = MoveGroupInterface(node, "prismatic_chain");
 
   rclcpp::init(argc, argv);
   rclcpp::Node::SharedPtr node = rclcpp::Node::make_shared("pose_tracking_demo");
@@ -218,26 +346,14 @@ int main(int argc, char** argv)
 
   // Convert it to a Pose
   geometry_msgs::msg::PoseStamped target_pose;
-  target_pose.header.frame_id = current_ee_tf.header.frame_id;
-  target_pose.pose.position.x = current_ee_tf.transform.translation.x;
-  target_pose.pose.position.y = current_ee_tf.transform.translation.y;
-  target_pose.pose.position.z = current_ee_tf.transform.translation.z;
-  target_pose.pose.orientation = current_ee_tf.transform.rotation;
 
-  // Modify it a little bit
-  target_pose.pose.position.x -= 1.0;
-  target_pose.pose.position.z -= 1.0;
-
-
-  // resetTargetPose() can be used to clear the target pose and wait for a new one, e.g. when moving between multiple waypoints
-  tracker.resetTargetPose();
-  RCLCPP_INFO_STREAM(LOGGER, "Start to publish pose info");
-
-  // Publish target pose
-  target_pose.header.stamp = node->now();
-  target_pose_pub->publish(target_pose);
-
-
+  RCLCPP_INFO(logger, "=== Moving to HOME ===");
+  std::vector<double> home_joints = {0.0, 0.0, 0.3, 0.0};
+  if (!plan_and_execute(prismatic_chain, home_joints, logger, "Home Position")) {
+    RCLCPP_ERROR(logger, "Failed to reach home! Aborting.");
+    rclcpp::shutdown();
+    return 1;
+  }
 
   // Run the pose tracking in a new thread
   std::thread move_to_pose_thread([&tracker, &lin_tol, &rot_tol] {

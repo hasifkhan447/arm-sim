@@ -19,6 +19,12 @@
         <joint name="gripper_left_joint"/>
         <joint name="gripper_right_joint"/>
     </group>
+    <group name="gripping">
+        <joint name="yaxis_to_zaxis"/>
+        <joint name="zaxis_to_eemount"/>
+        <joint name="gripper_left_joint"/>
+        <joint name="gripper_right_joint"/>
+    </group>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="ee1" parent_link="eemount" group="ee" parent_group="prismatic_chain"/>
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->

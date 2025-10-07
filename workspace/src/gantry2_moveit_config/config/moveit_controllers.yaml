@@ -6,6 +6,7 @@ moveit_simple_controller_manager:
   controller_names:
     - prismatic_chain_controller
     - ee_controller
+    - gripping_controller
 
   prismatic_chain_controller:
     type: FollowJointTrajectory
@@ -21,4 +22,11 @@ moveit_simple_controller_manager:
     joints:
       - gripper_left_joint
       - gripper_right_joint
+    action_ns: follow_joint_trajectory
+  gripping_controller:
+    type: FollowJointTrajectory
+    joints:
+      - yaxis_to_zaxis
+      - zaxis_to_eemount
+      - gripper_left_joint
     action_ns: follow_joint_trajectory
