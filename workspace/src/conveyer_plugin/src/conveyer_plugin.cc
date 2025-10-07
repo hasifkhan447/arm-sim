@@ -48,7 +48,7 @@ namespace gazebo
         if (m == model) continue; // skip conveyor itself
 
         std::string modelName = m->GetName();
-        if (modelName.find("cardboard_box") != 0) continue;
+        if (modelName.find("cardboard_box") != std::string::npos && modelName.find("microwave") != std::string::npos) continue;
 
         auto link = m->GetLink();
         if (!link) continue;
@@ -63,7 +63,7 @@ namespace gazebo
         {
           // Check if cube is above the conveyor top surface (with tolerance)
           double beltTopZ = beltBox.Max().Z();
-          if (pos.Z() >= beltTopZ && pos.Z() <= beltTopZ + 0.2)
+          if (pos.Z() >= beltTopZ)
           { 
             vel = direction * velocity;
           }

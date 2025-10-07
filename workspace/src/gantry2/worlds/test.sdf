@@ -36,7 +36,7 @@
   </model>
 
 <model name="cardboard_box">
-  <pose>-0.5 -0.5 0.15 0 0 0</pose>
+  <pose>-0.6 -0.5 0.15 0 0 0</pose>
     <link name="bottom">
     <pose>0 0 -0.095 0 0 0</pose>
   <collision name="collision">
@@ -409,51 +409,40 @@
 </model>
 
 <model name="microwave">
-  <pose>-0.3 -0.5 0.1 0 0 0</pose>
+  <pose>-0.31 -0.5 0.15 0 0 0</pose>
 
   <link name="microwave_link">
+
     <collision name="collision">
       <geometry>
         <box>
-          <size>0.1 0.1 0.1</size>
+          <size>0.1 0.2 0.1</size>
         </box>
       </geometry>
-      <surface>
-        <friction>
-          <ode>
-            <mu>0.8</mu>
-            <mu2>0.8</mu2>
-          </ode>
-        </friction>
-        <bounce>
-          <restitution_coefficient>0.4</restitution_coefficient>
-          <threshold>0.0</threshold>
-        </bounce>
-      </surface>
     </collision>
+
     <visual name="visual">
       <geometry>
         <box>
-          <size>0.1 0.1 0.1</size>
+          <size>0.1 0.2 0.1</size>
         </box>
       </geometry>
-      <material>
-        <ambient>1 1 1 1</ambient>
-        <diffuse>1 1 1 1</diffuse>
-        <specular>1 1 1 1</specular>
-      </material>
     </visual>
+
+
     <inertial>
-      <mass>0.5</mass>
+      <mass>20.0</mass>
       <inertia>
-        <ixx>0.00083</ixx>
-        <iyy>0.00083</iyy>
-        <izz>0.00083</izz>
+        <ixx>0.0833</ixx>
+        <iyy>0.0333</iyy>
+        <izz>0.0833</izz>
       </inertia>
     </inertial>
 
+
   </link>
 </model>
+
 	<plugin name="gazebo_link_attacher" filename="libgazebo_link_attacher.so"><model_name>gantry</model_name><attach_service_name>ATTACHLINK</attach_service_name><detach_service_name>DETACHLINK</detach_service_name></plugin>
 
 
