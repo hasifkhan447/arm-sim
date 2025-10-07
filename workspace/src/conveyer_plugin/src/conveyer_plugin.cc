@@ -48,7 +48,7 @@ namespace gazebo
         if (m == model) continue; // skip conveyor itself
 
         std::string modelName = m->GetName();
-        if (modelName.find("cardboard_box") != 0) continue; // only cubes
+        if (modelName.find("cardboard_box") != 0) continue;
 
         auto link = m->GetLink();
         if (!link) continue;

@@ -36,6 +36,6 @@ ros2 launch six_dof_arm launch_moveit.py
 
 
 # What do I need to do?
-TODO: Based on ghufran's EE adjust the gripping and evaluate it
+The system will use moveit servo to "slave" xyz "smartly". It'll do local obstacle avoidance. It'll only switch to complicated planning when we need to do anything.
 TODO: Set up cameras and then do tracking 
 TODO: Do grasping of the cardboard box

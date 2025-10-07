@@ -53,8 +53,8 @@
 #include <rclcpp_action/rclcpp_action.hpp>
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <control_msgs/action/follow_joint_trajectory.hpp>
-#include <linkattacher_msgs/srv/attach_link.hpp>
-#include <linkattacher_msgs/srv/detach_link.hpp>
+// #include <linkattacher_msgs/srv/attach_link.hpp>
+// #include <linkattacher_msgs/srv/detach_link.hpp>
 
 
 #include <thread>
@@ -158,60 +158,6 @@ bool plan_and_execute(MoveGroupInterface &move_group, const std::vector<double> 
     return success;
 }
 
-// New: Attach link using service
-bool attach_link(rclcpp::Node::SharedPtr node, rclcpp::Logger logger, const std::string& entity_name, const std::string& link_name)
-{
-    auto client = node->create_client<linkattacher_msgs::srv::AttachLink>("/ATTACHLINK");
-    if (!client->wait_for_service(std::chrono::seconds(5))) {
-        RCLCPP_ERROR(logger, "Attach service not available!");
-        return false;
-    }
-    
-    auto request = std::make_shared<linkattacher_msgs::srv::AttachLink::Request>();
-    request->model1_name = "gantry";  // Adjust to your robot model name
-    request->link1_name = "left_finger";   // Adjust to your gripper finger link
-    request->model2_name = entity_name;
-    request->link2_name = link_name;         // Box base link
-    
-    auto result_future = client->async_send_request(request);
-    if (rclcpp::spin_until_future_complete(node, result_future, std::chrono::seconds(5)) !=
-        rclcpp::FutureReturnCode::SUCCESS)
-    {
-        RCLCPP_ERROR(logger, "Failed to call attach service");
-        return false;
-    }
-    
-    RCLCPP_INFO(logger, "Attachment successful");
-    return true;
-}
-
-// New: Detach link using service
-bool detach_link(rclcpp::Node::SharedPtr node, rclcpp::Logger logger, const std::string& entity_name, const std::string& link_name)
-{
-    auto client = node->create_client<linkattacher_msgs::srv::DetachLink>("/DETACHLINK");
-    if (!client->wait_for_service(std::chrono::seconds(5))) {
-        RCLCPP_ERROR(logger, "Detach service not available!");
-        return false;
-    }
-    
-    auto request = std::make_shared<linkattacher_msgs::srv::DetachLink::Request>();
-    request->model1_name = "gantry";  // Adjust to your robot model name
-    request->link1_name = "left_finger";   // Adjust to your gripper finger link
-    request->model2_name = entity_name;
-    request->link2_name = link_name;         // Box base link
-    
-    auto result_future = client->async_send_request(request);
-    if (rclcpp::spin_until_future_complete(node, result_future, std::chrono::seconds(5)) !=
-        rclcpp::FutureReturnCode::SUCCESS)
-    {
-        RCLCPP_ERROR(logger, "Failed to call detach service");
-        return false;
-    }
-    
-    RCLCPP_INFO(logger, "Detachment successful");
-    return true;
-}
-
 
 void publishTargetPoseLoop(
     const rclcpp::Node::SharedPtr &node,
@@ -251,11 +197,11 @@ int main(int argc, char** argv)
   RCLCPP_INFO(LOGGER, "Started");
 
 
-  auto prismatic_chain = MoveGroupInterface(node, "prismatic_chain");
 
   rclcpp::init(argc, argv);
   rclcpp::Node::SharedPtr node = rclcpp::Node::make_shared("pose_tracking_demo");
 
+  auto gripping_interface = MoveGroupInterface(node, "gripping");
   node->set_parameter(rclcpp::Parameter("use_sim_time", true));
 
   rclcpp::executors::SingleThreadedExecutor executor;
@@ -288,12 +234,6 @@ int main(int argc, char** argv)
   planning_scene_monitor->startStateMonitor(servo_parameters->joint_topic);
   planning_scene_monitor->startPublishingPlanningScene(planning_scene_monitor::PlanningSceneMonitor::UPDATE_SCENE);
 
-  // // Wait for Planning Scene Monitor to setup
-  // if (!planning_scene_monitor->waitForCurrentRobotState(node->now(), 5.0 /* seconds */))
-  // {
-  //   RCLCPP_ERROR_STREAM(LOGGER, "Error waiting for current robot state in PlanningSceneMonitor.");
-  //   exit(EXIT_FAILURE);
-  // }
 
 
   const double timeout = 5.0;  // seconds
@@ -347,13 +287,6 @@ int main(int argc, char** argv)
   // Convert it to a Pose
   geometry_msgs::msg::PoseStamped target_pose;
 
-  RCLCPP_INFO(logger, "=== Moving to HOME ===");
-  std::vector<double> home_joints = {0.0, 0.0, 0.3, 0.0};
-  if (!plan_and_execute(prismatic_chain, home_joints, logger, "Home Position")) {
-    RCLCPP_ERROR(logger, "Failed to reach home! Aborting.");
-    rclcpp::shutdown();
-    return 1;
-  }
 
   // Run the pose tracking in a new thread
   std::thread move_to_pose_thread([&tracker, &lin_tol, &rot_tol] {
@@ -367,14 +300,17 @@ int main(int argc, char** argv)
   rclcpp::Rate loop_rate(1);
   for (size_t i = 0; i < 500; ++i)
   {
-    // target_pose.pose.position.z += 0.0004;
     second_target_pose = getGazeboPose("cardboard_box");
-    second_target_pose.pose.position.z = current_ee_tf.transform.translation.z;
 
 
+    if (i < 10) {
+      second_target_pose.pose.position.z = current_ee_tf.transform.translation.z;
+    }
 
     second_target_pose.header.stamp = node->now();
     target_pose_pub->publish(second_target_pose);
+
+
 
     loop_rate.sleep();
   }

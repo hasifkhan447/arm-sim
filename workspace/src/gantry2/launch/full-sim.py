@@ -100,6 +100,14 @@ def generate_launch_description():
         output='screen'
     )
 
+    load_moving_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+             '--set-state', 'active', 'moving_controller'],
+        output='screen'
+    )
+
+
+
     load_gripping_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller',
              '--set-state', 'active', 'gripping_controller'],
@@ -194,24 +202,17 @@ def generate_launch_description():
             )
         ),
 
-        # RegisterEventHandler(
-        #     event_handler=OnProcessExit(
-        #         target_action=load_joint_state_controller,
-        #         on_exit=[load_arm_controller]
-        #     )
-        # ),
-        #
-        # RegisterEventHandler(
-        #     event_handler=OnProcessExit(
-        #         target_action=load_arm_controller,
-        #         on_exit=[load_ee_controller]
-        #     )
-        # ),
-
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=load_joint_state_controller,
-                on_exit=[load_gripping_controller]
+                on_exit=[load_arm_controller]
+            )
+        ),
+
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_arm_controller,
+                on_exit=[load_ee_controller]
             )
         ),
 
