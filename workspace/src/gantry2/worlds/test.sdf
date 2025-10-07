@@ -36,7 +36,7 @@
   </model>
 
 <model name="cardboard_box">
-  <pose>-0.6 -0.5 0.15 0 0 0</pose>
+  <pose>-0.4 -0.5 0.15 0 0 0</pose>
     <link name="bottom">
     <pose>0 0 -0.095 0 0 0</pose>
   <collision name="collision">
@@ -409,7 +409,7 @@
 </model>
 
 <model name="microwave">
-  <pose>-0.31 -0.5 0.15 0 0 0</pose>
+  <pose>-0.1 -0.5 0.11 0 0 0</pose>
 
   <link name="microwave_link">
 
@@ -431,11 +431,11 @@
 
 
     <inertial>
-      <mass>20.0</mass>
+      <mass>100.0</mass>
       <inertia>
-        <ixx>0.0833</ixx>
-        <iyy>0.0333</iyy>
-        <izz>0.0833</izz>
+        <ixx>0.00833</ixx>
+        <iyy>100</iyy>
+        <izz>100</izz>
       </inertia>
     </inertial>
 
